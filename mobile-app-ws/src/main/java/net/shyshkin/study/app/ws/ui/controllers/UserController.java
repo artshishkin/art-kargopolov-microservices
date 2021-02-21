@@ -3,8 +3,10 @@ package net.shyshkin.study.app.ws.ui.controllers;
 import net.shyshkin.study.app.ws.ui.model.UserDetails;
 import net.shyshkin.study.app.ws.ui.model.dto.UserDto;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -20,7 +22,7 @@ public class UserController {
 
     public static final String BASE_URL = "/users";
 
-    private final Map<String, UserDto> userRepository = new HashMap<>();
+    private final Map<UUID, UserDto> userRepository = new HashMap<>();
 
     @GetMapping
     public List<UserDto> getAllUser(@RequestParam(defaultValue = "1") int page,
@@ -33,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
-    public ResponseEntity<UserDto> getUser(@PathVariable String userId) {
+    public ResponseEntity<UserDto> getUser(@PathVariable UUID userId) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("ArtHeader", "SuperSecretArtHeaderValue");
@@ -62,7 +64,7 @@ public class UserController {
     @ResponseStatus(CREATED)
     public UserDto createUser(@Valid @RequestBody UserDetails userDetails) {
         UserDto userDto = UserDto.builder()
-                .userId(UUID.randomUUID().toString())
+                .userId(UUID.randomUUID())
                 .firstName(userDetails.getFirstName())
                 .lastName(userDetails.getLastName())
                 .email(userDetails.getEmail())
@@ -71,9 +73,14 @@ public class UserController {
         return userDto;
     }
 
-    @PutMapping
-    public String updateUser(String user) {
-        return "User was updated: " + user;
+    @PutMapping("{userId}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable("userId") UUID userId, @Valid @RequestBody UserDto user) {
+        if (!userRepository.containsKey(userId))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with Id `" + userId + "` not found");
+//        if (!userRepository.containsKey(userId)) return ResponseEntity.noContent().build();
+        user.setUserId(userId);
+        userRepository.put(userId, user);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping
