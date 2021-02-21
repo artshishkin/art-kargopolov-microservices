@@ -1,5 +1,7 @@
 package net.shyshkin.study.app.ws.services;
 
+import lombok.RequiredArgsConstructor;
+import net.shyshkin.study.app.ws.shared.Utils;
 import net.shyshkin.study.app.ws.ui.model.UserDetails;
 import net.shyshkin.study.app.ws.ui.model.dto.UserDto;
 import org.springframework.http.HttpStatus;
@@ -10,14 +12,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final Map<UUID, UserDto> userRepository = new HashMap<>();
 
+    private final Utils utils;
+
     @Override
     public UserDto createUser(UserDetails userDetails) {
         UserDto userDto = UserDto.builder()
-                .userId(UUID.randomUUID())
+                .userId(utils.generateUserId())
                 .firstName(userDetails.getFirstName())
                 .lastName(userDetails.getLastName())
                 .email(userDetails.getEmail())
