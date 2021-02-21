@@ -1,17 +1,16 @@
 package net.shyshkin.study.app.ws.ui.controllers;
 
-import net.shyshkin.study.app.ws.exceptions.UserServiceException;
+import lombok.RequiredArgsConstructor;
+import net.shyshkin.study.app.ws.services.UserService;
 import net.shyshkin.study.app.ws.ui.model.UserDetails;
 import net.shyshkin.study.app.ws.ui.model.dto.UserDto;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -20,23 +19,21 @@ import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
 @RestController
 @RequestMapping(UserController.BASE_URL)
+@RequiredArgsConstructor
 public class UserController {
 
     public static final String BASE_URL = "/users";
 
-    private final Map<UUID, UserDto> userRepository = new HashMap<>();
+    private final UserService userService;
 
     @GetMapping
     public List<UserDto> getAllUser(@RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "25") int limit,
                                     @RequestParam(required = false) String sort) {
 
-        if (true) throw new UserServiceException("User Service Exception is thrown");
+//        if (true) throw new UserServiceException("User Service Exception is thrown");
 
-        return userRepository.values()
-                .stream()
-                .limit(limit)
-                .collect(Collectors.toList());
+        return userService.getAllUsers(page, limit, sort);
     }
 
     @GetMapping(value = "/{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
@@ -45,8 +42,7 @@ public class UserController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("ArtHeader", "SuperSecretArtHeaderValue");
 
-        return Optional
-                .ofNullable(userRepository.get(userId))
+        return userService.getUser(userId)
                 .map(userDto -> new ResponseEntity<>(userDto, httpHeaders, 200))
                 .orElse(ResponseEntity.noContent().build());
     }
@@ -68,29 +64,18 @@ public class UserController {
     )
     @ResponseStatus(CREATED)
     public UserDto createUser(@Valid @RequestBody UserDetails userDetails) {
-        UserDto userDto = UserDto.builder()
-                .userId(UUID.randomUUID())
-                .firstName(userDetails.getFirstName())
-                .lastName(userDetails.getLastName())
-                .email(userDetails.getEmail())
-                .build();
-        userRepository.put(userDto.getUserId(), userDto);
-        return userDto;
+        return userService.createUser(userDetails);
     }
 
     @PutMapping("{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("userId") UUID userId, @Valid @RequestBody UserDto user) {
-        if (!userRepository.containsKey(userId))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with Id `" + userId + "` not found");
-//        if (!userRepository.containsKey(userId)) return ResponseEntity.noContent().build();
         user.setUserId(userId);
-        userRepository.put(userId, user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.updateUser(user));
     }
 
     @DeleteMapping("{userId}")
     @ResponseStatus(NO_CONTENT)
     public void deleteUser(@PathVariable UUID userId) {
-        userRepository.remove(userId);
+        userService.deleteUser(userId);
     }
 }
