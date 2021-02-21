@@ -10,6 +10,7 @@
 
     <modules>
         <module>mobile-app-ws</module>
+        <module>photo-app-discovery-service</module>
     </modules>
 
 </project>
