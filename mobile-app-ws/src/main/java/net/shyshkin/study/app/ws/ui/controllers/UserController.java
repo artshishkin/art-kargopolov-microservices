@@ -3,6 +3,9 @@ package net.shyshkin.study.app.ws.ui.controllers;
 import net.shyshkin.study.app.ws.ui.model.dto.UserDto;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
+
 @RestController
 @RequestMapping(UserController.BASE_URL)
 public class UserController {
@@ -16,7 +19,7 @@ public class UserController {
         return String.format("Get Users was called. Page %d of %d. Sort is %s", page, limit, sort);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping(value = "/{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
     public UserDto getUser(@PathVariable String userId) {
         return UserDto.builder()
                 .userId(userId)
