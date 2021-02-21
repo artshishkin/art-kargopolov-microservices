@@ -29,6 +29,9 @@ public class UserController {
     public List<UserDto> getAllUser(@RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "25") int limit,
                                     @RequestParam(required = false) String sort) {
+        String nullPointerExceptionTest = null;
+        int length = nullPointerExceptionTest.length();
+
         return userRepository.values()
                 .stream()
                 .limit(limit)
