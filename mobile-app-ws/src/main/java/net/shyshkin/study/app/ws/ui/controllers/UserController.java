@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -40,13 +41,14 @@ public class UserController {
     }
 
 //curl --location --request POST 'http://localhost:8080/users' \
+//--header 'Accept: application/json' \
 //--header 'Content-Type: application/json' \
 //--header 'Cookie: JSESSIONID=DDE78460CC129994CDBE87744FE56B89' \
 //--data-raw '{
 //    "firstName": "Art",
 //    "lastName": "Shyshkin",
 //    "email": "myemail@example.com",
-//    "password": "super_secret_password"
+//    "password": "my super secret password with 1 number and A capital letter"
 //}'
 
     @PostMapping(
@@ -54,12 +56,12 @@ public class UserController {
             produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE}
     )
     @ResponseStatus(CREATED)
-    public UserDto createUser(@RequestBody UserDetails userDetails) {
+    public UserDto createUser(@Valid @RequestBody UserDetails userDetails) {
         return UserDto.builder()
                 .userId(UUID.randomUUID().toString())
                 .firstName(userDetails.getFirstName())
                 .lastName(userDetails.getLastName())
-                .email("fake@example.com")
+                .email(userDetails.getEmail())
                 .build();
     }
 

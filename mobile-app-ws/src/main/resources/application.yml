@@ -1,0 +1,5 @@
+server.error:
+  include-message: always
+  include-binding-errors: always
+#  include-exception: true
+#  include-stacktrace: always
