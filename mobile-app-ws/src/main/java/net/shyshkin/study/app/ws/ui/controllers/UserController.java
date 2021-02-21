@@ -1,5 +1,6 @@
 package net.shyshkin.study.app.ws.ui.controllers;
 
+import net.shyshkin.study.app.ws.ui.model.dto.UserDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +17,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public String getUser(@PathVariable String userId) {
-        return "Get User was called for user " + userId;
+    public UserDto getUser(@PathVariable String userId) {
+        return UserDto.builder()
+                .userId(userId)
+                .firstName("Art")
+                .lastName("Shyshkin")
+                .email("myemail@example.com")
+                .build();
     }
 
     @PostMapping
