@@ -9,8 +9,10 @@ public class UserController {
     public static final String BASE_URL = "/users";
 
     @GetMapping
-    public String getAllUser(int page, int limit) {
-        return String.format("Get Users was called. Page %d of %d.", page, limit);
+    public String getAllUser(@RequestParam(defaultValue = "1") int page,
+                             @RequestParam(defaultValue = "25") int limit,
+                             @RequestParam(required = false) String sort) {
+        return String.format("Get Users was called. Page %d of %d. Sort is %s", page, limit, sort);
     }
 
     @GetMapping("/{userId}")
