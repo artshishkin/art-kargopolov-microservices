@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -19,25 +20,28 @@ public class UserController {
 
     public static final String BASE_URL = "/users";
 
+    private final Map<String, UserDto> userRepository = new HashMap<>();
+
     @GetMapping
-    public String getAllUser(@RequestParam(defaultValue = "1") int page,
-                             @RequestParam(defaultValue = "25") int limit,
-                             @RequestParam(required = false) String sort) {
-        return String.format("Get Users was called. Page %d of %d. Sort is %s", page, limit, sort);
+    public List<UserDto> getAllUser(@RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "25") int limit,
+                                    @RequestParam(required = false) String sort) {
+        return userRepository.values()
+                .stream()
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
     public ResponseEntity<UserDto> getUser(@PathVariable String userId) {
-        UserDto userDto = UserDto.builder()
-                .userId(userId)
-                .firstName("Art")
-                .lastName("Shyshkin")
-                .email("myemail@example.com")
-                .build();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("ArtHeader", "SuperSecretArtHeaderValue");
-        return new ResponseEntity<>(userDto, httpHeaders, 200);
+
+        return Optional
+                .ofNullable(userRepository.get(userId))
+                .map(userDto -> new ResponseEntity<>(userDto, httpHeaders, 200))
+                .orElse(ResponseEntity.noContent().build());
     }
 
 //curl --location --request POST 'http://localhost:8080/users' \
@@ -57,12 +61,14 @@ public class UserController {
     )
     @ResponseStatus(CREATED)
     public UserDto createUser(@Valid @RequestBody UserDetails userDetails) {
-        return UserDto.builder()
+        UserDto userDto = UserDto.builder()
                 .userId(UUID.randomUUID().toString())
                 .firstName(userDetails.getFirstName())
                 .lastName(userDetails.getLastName())
                 .email(userDetails.getEmail())
                 .build();
+        userRepository.put(userDto.getUserId(), userDto);
+        return userDto;
     }
 
     @PutMapping
