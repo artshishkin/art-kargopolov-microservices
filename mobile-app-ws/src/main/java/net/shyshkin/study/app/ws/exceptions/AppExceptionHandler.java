@@ -16,7 +16,7 @@ import java.util.Date;
 @RestControllerAdvice
 public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
-//    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage handleAnyException(Exception ex, WebRequest webRequest) {
 //        log.error("Handling Exception", ex);
@@ -34,6 +34,15 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         String message = Arrays.toString(ex.getStackTrace());
         return ErrorMessage.builder()
                 .message(message)
+                .timestamp(new Date())
+                .build();
+    }
+
+    @ExceptionHandler(UserServiceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleUserServiceException(UserServiceException ex) {
+        return ErrorMessage.builder()
+                .message(ex.getMessage())
                 .timestamp(new Date())
                 .build();
     }

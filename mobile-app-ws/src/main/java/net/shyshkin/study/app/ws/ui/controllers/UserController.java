@@ -1,5 +1,6 @@
 package net.shyshkin.study.app.ws.ui.controllers;
 
+import net.shyshkin.study.app.ws.exceptions.UserServiceException;
 import net.shyshkin.study.app.ws.ui.model.UserDetails;
 import net.shyshkin.study.app.ws.ui.model.dto.UserDto;
 import org.springframework.http.HttpHeaders;
@@ -29,8 +30,8 @@ public class UserController {
     public List<UserDto> getAllUser(@RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "25") int limit,
                                     @RequestParam(required = false) String sort) {
-        String nullPointerExceptionTest = null;
-        int length = nullPointerExceptionTest.length();
+
+        if (true) throw new UserServiceException("User Service Exception is thrown");
 
         return userRepository.values()
                 .stream()
