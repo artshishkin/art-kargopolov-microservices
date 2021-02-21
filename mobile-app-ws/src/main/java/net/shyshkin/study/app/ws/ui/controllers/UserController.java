@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
@@ -83,8 +84,9 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping
-    public String deleteUser(String user) {
-        return "User was deleted: " + user;
+    @DeleteMapping("{userId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteUser(@PathVariable UUID userId) {
+        userRepository.remove(userId);
     }
 }
