@@ -1,6 +1,8 @@
 package net.shyshkin.study.app.ws.ui.controllers;
 
 import net.shyshkin.study.app.ws.ui.model.dto.UserDto;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -20,13 +22,17 @@ public class UserController {
     }
 
     @GetMapping(value = "/{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
-    public UserDto getUser(@PathVariable String userId) {
-        return UserDto.builder()
+    public ResponseEntity<UserDto> getUser(@PathVariable String userId) {
+        UserDto userDto = UserDto.builder()
                 .userId(userId)
                 .firstName("Art")
                 .lastName("Shyshkin")
                 .email("myemail@example.com")
                 .build();
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("ArtHeader", "SuperSecretArtHeaderValue");
+        return new ResponseEntity<>(userDto, httpHeaders, 200);
     }
 
     @PostMapping
