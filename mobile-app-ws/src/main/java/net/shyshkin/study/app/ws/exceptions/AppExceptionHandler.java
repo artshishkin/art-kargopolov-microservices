@@ -28,21 +28,13 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(NullPointerException.class)
+    @ExceptionHandler({NullPointerException.class, UserServiceException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorMessage handleNPE(NullPointerException ex, WebRequest webRequest) {
-        String message = Arrays.toString(ex.getStackTrace());
+    public ErrorMessage handleSpecificExceptions(RuntimeException ex) {
+        String message = ex.getLocalizedMessage();
+        if (message == null) message = Arrays.toString(ex.getStackTrace());
         return ErrorMessage.builder()
                 .message(message)
-                .timestamp(new Date())
-                .build();
-    }
-
-    @ExceptionHandler(UserServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage handleUserServiceException(UserServiceException ex) {
-        return ErrorMessage.builder()
-                .message(ex.getMessage())
                 .timestamp(new Date())
                 .build();
     }
