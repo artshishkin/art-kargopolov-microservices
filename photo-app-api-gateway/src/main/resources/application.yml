@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: api-gateway
+server.port: 8011
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka
+  instance:
+    prefer-ip-address: true
+info:
+  app:
+    name: '@project.name@'
+    version: '@project.version@'
+    encoding: '@project.build.sourceEncoding@'
+  service:
+    name: ${spring.application.name}
