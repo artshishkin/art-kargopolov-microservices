@@ -1,12 +1,8 @@
 spring:
   application:
     name: api-gateway
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+  profiles:
+    include: routing-using-properties
 server.port: 8011
 eureka:
   client:
