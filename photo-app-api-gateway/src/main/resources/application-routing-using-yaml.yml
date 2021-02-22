@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        -
+          id: users-status-check
+          uri: lb://users-ws
+          predicates:
+            - Path=/users/status/check
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
