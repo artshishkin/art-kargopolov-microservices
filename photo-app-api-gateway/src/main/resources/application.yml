@@ -1,6 +1,12 @@
 spring:
   application:
     name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
 server.port: 8011
 eureka:
   client:
