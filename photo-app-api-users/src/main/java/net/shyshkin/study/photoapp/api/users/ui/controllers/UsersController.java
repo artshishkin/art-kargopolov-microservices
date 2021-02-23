@@ -1,11 +1,9 @@
 package net.shyshkin.study.photoapp.api.users.ui.controllers;
 
 import lombok.RequiredArgsConstructor;
+import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -20,7 +18,7 @@ public class UsersController {
     }
 
     @PostMapping
-    public String createUser(){
-        return "Create user method is Called";
+    public String createUser(@RequestBody CreateUserRequestModel user) {
+        return "Create user method is Called for user" + user;
     }
 }
