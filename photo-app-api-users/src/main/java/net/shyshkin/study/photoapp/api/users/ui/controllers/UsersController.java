@@ -5,6 +5,8 @@ import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class UsersController {
     }
 
     @PostMapping
-    public String createUser(@RequestBody CreateUserRequestModel user) {
+    public String createUser(@Valid @RequestBody CreateUserRequestModel user) {
         return "Create user method is Called for user" + user;
     }
 }
