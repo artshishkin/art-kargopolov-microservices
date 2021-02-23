@@ -49,7 +49,7 @@ class UsersControllerIT {
         ResponseEntity<UserDto> responseEntity = restTemplate.postForEntity(url, userRequestModel, UserDto.class);
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         UserDto userDto = responseEntity.getBody();
         assertThat(userDto).hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("firstName", userRequestModel.getFirstName())
