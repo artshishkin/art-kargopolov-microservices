@@ -45,4 +45,29 @@ spring:
     -  `mvn spring-boot:run -Dspring-boot.run.arguments="'--spring.application.instance_id=art2' '--server.port=8123'"`
     -  **OR**
     -  `mvn spring-boot:run -Dspring-boot.run.arguments="--spring.application.instance_id=art3 --PORT=8321"`
-    
+
+#####  72. Adding Support for the H2 Database
+
+just using H2-console to operate MySQL Database
+1.  Start services  
+    -  start eureka
+    -  start user service
+    -  start API gateway
+2.  Login to h2-console    
+    -  browse to `localhost:8011/users-ws/h2-console`
+    -  Setting Name: `Generic MySQL` -> use DB from previous project
+    -  JDBC URL: `jdbc:mysql://localhost:3306/beerservice?serverTimezone=UTC`
+    -  User name: `beer_service`
+    -  Password: `password`
+    -  Test connection
+        -  Got an Error
+            -  `Класс "com.mysql.jdbc.Driver" не найден`
+            -  `Class "com.mysql.jdbc.Driver" not found [90086-200]`    
+        -  Need to add MySQL to classpath -> **just skip this test for now**
+3.  Trying Generic H2 in-memory Database
+    -  JDBC URL: `jdbc:h2:mem:testdb`
+    -  Test connection
+        -  Got an Error
+        -  `Database "mem:testdb" not found, either pre-create it or allow remote database creation (not recommended in secure environments) [90149-200]`
+4.  Add Spring Data JPA
+    -  Test it -> OK        

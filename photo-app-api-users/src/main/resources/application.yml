@@ -1,6 +1,18 @@
 spring:
   application:
     name: users-ws
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
 server.port: ${PORT:0}
 eureka:
   client:
