@@ -1,13 +1,14 @@
 spring:
   application:
     name: users-ws
-server.port: 0
+server.port: ${PORT:0}
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8010/eureka
   instance:
     prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 info:
   app:
     name: '@project.name@'

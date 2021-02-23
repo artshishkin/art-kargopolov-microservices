@@ -33,3 +33,16 @@ spring:
 ```json
 {"app":{"name":"account-management-service","version":"0.0.1-SNAPSHOT","encoding":"UTF-8"},"service":{"name":"account-management-ws"}}
 ```
+
+####  Section 10: Spring Cloud API Gateway as a Load Balancer
+
+#####  68. Starting Up More Microservices
+
+-  start 2 instances of `users-service`
+-  start another instance by using command line arguments
+    -  `mvn spring-boot:run -Dspring-boot.run.arguments=--spring.application.instance_id=art`
+    -  **and one more** with port
+    -  `mvn spring-boot:run -Dspring-boot.run.arguments="'--spring.application.instance_id=art2' '--server.port=8123'"`
+    -  **OR**
+    -  `mvn spring-boot:run -Dspring-boot.run.arguments="--spring.application.instance_id=art3 --PORT=8321"`
+    
