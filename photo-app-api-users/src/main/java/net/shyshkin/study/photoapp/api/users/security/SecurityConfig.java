@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AppAuthenticationFilter appAuthenticationFilter() throws Exception {
         AppAuthenticationFilter authFilter = new AppAuthenticationFilter(objectMapper, environment, userService);
         authFilter.setAuthenticationManager(this.authenticationManager());
+        authFilter.setFilterProcessesUrl(environment.getRequiredProperty("login.url.path"));
         return authFilter;
     }
 

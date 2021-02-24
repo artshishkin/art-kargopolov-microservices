@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
@@ -38,6 +39,9 @@ import static org.springframework.http.MediaType.*;
         "logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE"
 })
 class UsersControllerIT {
+
+    @Value("${login.url.path}")
+    private String LOGIN_URL;
 
     @Autowired
     TestRestTemplate restTemplate;
@@ -91,7 +95,7 @@ class UsersControllerIT {
     @DisplayName("When absent in DB user tries to login should return UNAUTHORIZED status")
     void login_whenUserAbsent_mustBeUnauthorized() {
         //given
-        URI url = URI.create("/login");
+        URI url = URI.create(LOGIN_URL);
         LoginRequestModel loginRequestModel = LoginRequestModel.builder()
                 .email("absent@example.com")
                 .password("password of absent user")
@@ -114,7 +118,7 @@ class UsersControllerIT {
                 .hasFieldOrPropertyWithValue("status", 401)
                 .hasFieldOrPropertyWithValue("error", "Unauthorized")
                 .hasFieldOrProperty("message")
-                .hasFieldOrPropertyWithValue("path", "/login");
+                .hasFieldOrPropertyWithValue("path", LOGIN_URL);
     }
 
     @Test
@@ -131,7 +135,7 @@ class UsersControllerIT {
         ResponseEntity<CreateUserResponseModel> responseEntityCreate = restTemplate.postForEntity(url, userRequestModel, CreateUserResponseModel.class);
         assertThat(responseEntityCreate.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        url = URI.create("/login");
+        url = URI.create(LOGIN_URL);
         LoginRequestModel loginRequestModel = LoginRequestModel.builder()
                 .email("super@example.com")
                 .password("WR0NG password")
@@ -154,7 +158,7 @@ class UsersControllerIT {
                 .hasFieldOrPropertyWithValue("status", 401)
                 .hasFieldOrPropertyWithValue("error", "Unauthorized")
                 .hasFieldOrProperty("message")
-                .hasFieldOrPropertyWithValue("path", "/login");
+                .hasFieldOrPropertyWithValue("path", LOGIN_URL);
     }
 
     @Test
@@ -171,7 +175,7 @@ class UsersControllerIT {
         ResponseEntity<CreateUserResponseModel> responseEntityCreate = restTemplate.postForEntity(url, userRequestModel, CreateUserResponseModel.class);
         assertThat(responseEntityCreate.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        url = URI.create("/login");
+        url = URI.create(LOGIN_URL);
         LoginRequestModel loginRequestModel = LoginRequestModel.builder()
                 .email("super@example.com")
                 .password("my super secret password with 1 number and A capital letter")
