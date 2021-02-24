@@ -8,9 +8,13 @@
     <artifactId>art-kargopolov-microservices</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <packaging>pom</packaging>
+
     <modules>
-        <module>mobile-app-ws</module>
         <module>photo-app-discovery-service</module>
+        <module>photo-app-api-users</module>
+        <module>photo-app-api-gateway</module>
+        <module>account-management-service</module>
     </modules>
 
 </project>
