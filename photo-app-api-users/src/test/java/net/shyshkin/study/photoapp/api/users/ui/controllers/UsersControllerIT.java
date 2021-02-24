@@ -3,13 +3,16 @@ package net.shyshkin.study.photoapp.api.users.ui.controllers;
 import net.shyshkin.study.photoapp.api.users.data.UserRepository;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserResponseModel;
+import net.shyshkin.study.photoapp.api.users.ui.model.LoginRequestModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 import java.net.URI;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.*;
@@ -40,7 +44,7 @@ class UsersControllerIT {
         userRepository.deleteAll();
     }
 
-    @ParameterizedTest(name="[{index}] {arguments}")
+    @ParameterizedTest(name = "[{index}] {arguments}")
     @ValueSource(strings = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
     void createUser(String mediaTypeString) {
         //given
@@ -75,5 +79,35 @@ class UsersControllerIT {
                                 .hasFieldOrPropertyWithValue("firstName", userRequestModel.getFirstName())
                                 .hasFieldOrPropertyWithValue("lastName", userRequestModel.getLastName())
                                 .hasFieldOrPropertyWithValue("email", userRequestModel.getEmail()));
+    }
+
+    @Test
+    @DisplayName("When absent in DB user tries to login should return UNAUTHORIZED status")
+    void login_whenUserAbsent_mustBeUnauthorized() {
+        //given
+        URI url = URI.create("/login");
+        LoginRequestModel loginRequestModel = LoginRequestModel.builder()
+                .email("absent@example.com")
+                .password("password of absent user")
+                .build();
+
+        //when
+        RequestEntity<LoginRequestModel> requestEntity = RequestEntity.post(url)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(loginRequestModel);
+
+        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {
+        });
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        Map<String, Object> defaultErrorAttributesMap = responseEntity.getBody();
+        assertThat(defaultErrorAttributesMap)
+                .hasFieldOrProperty("timestamp")
+                .hasFieldOrPropertyWithValue("status", 401)
+                .hasFieldOrPropertyWithValue("error", "Unauthorized")
+                .hasFieldOrProperty("message")
+                .hasFieldOrPropertyWithValue("path", "/login");
     }
 }

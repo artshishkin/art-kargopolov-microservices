@@ -71,3 +71,55 @@ just using H2-console to operate MySQL Database
         -  `Database "mem:testdb" not found, either pre-create it or allow remote database creation (not recommended in secure environments) [90149-200]`
 4.  Add Spring Data JPA
     -  Test it -> OK        
+
+####  Section 13: Users Microservice - Implementing User Login
+
+#####  95. Implementing loadUserByUserName()
+
+-  testing
+    -  create user first
+```shell script
+curl --location --request POST 'http://localhost:8011/users-ws/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{    
+    "firstName": "Art",
+    "lastName": "Shyshkin",
+    "email": "myemail@example.com",
+    "password": "my super secret password with 1 number and A capital letter"
+}'
+```
+    -  test present user -> Status OK 200
+```shell script
+curl --location --request POST 'http://localhost:8011/users-ws/login' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "myemail@example.com",
+    "password": "my super secret password with 1 number and A capital letter"
+}'
+```    
+    -  test absent user -> Status UNAUTHORIZED 401
+```shell script
+curl --location --request POST 'http://localhost:8011/users-ws/login' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "myemailAbsent@example.com",
+    "password": "my super secret password with 1 number and A capital letter"
+}'
+```
+```json
+{
+    "timestamp": "2021-02-24T17:03:22.347+00:00",
+    "status": 401,
+    "error": "Unauthorized",
+    "message": "Unauthorized",
+    "path": "/login"
+}
+```        
+
+
+
+
+    
