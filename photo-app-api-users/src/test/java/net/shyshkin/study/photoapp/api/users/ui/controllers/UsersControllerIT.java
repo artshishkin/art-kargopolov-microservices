@@ -29,7 +29,13 @@ import static org.springframework.http.MediaType.*;
 @TestPropertySource(properties = {
         "eureka.client.register-with-eureka=false",
         "spring.cloud.discovery.enabled=false",
-        "gateway.ip=127.0.0.1"
+        "gateway.ip=127.0.0.1",
+
+        "spring.jpa.properties.hibernate.generate_statistics=true",
+        "logging.level.org.hibernate.stat=debug",
+        "spring.jpa.show-sql=true",
+        "spring.jpa.properties.hibernate.format_sql=true",
+        "logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE"
 })
 class UsersControllerIT {
 
@@ -110,4 +116,86 @@ class UsersControllerIT {
                 .hasFieldOrProperty("message")
                 .hasFieldOrPropertyWithValue("path", "/login");
     }
+
+    @Test
+    @DisplayName("When user present in DB tries to login with WRONG password should return UNAUTHORIZED status")
+    void login_whenUserPresentButPasswordIsWrong_mustBeOk() {
+        //given
+        URI url = URI.create(UsersController.BASE_URL);
+        CreateUserRequestModel userRequestModel = CreateUserRequestModel.builder()
+                .firstName("Art")
+                .lastName("Shyshkin")
+                .email("super@example.com")
+                .password("my super secret password with 1 number and A capital letter")
+                .build();
+        ResponseEntity<CreateUserResponseModel> responseEntityCreate = restTemplate.postForEntity(url, userRequestModel, CreateUserResponseModel.class);
+        assertThat(responseEntityCreate.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        url = URI.create("/login");
+        LoginRequestModel loginRequestModel = LoginRequestModel.builder()
+                .email("super@example.com")
+                .password("WR0NG password")
+                .build();
+
+        //when
+        RequestEntity<LoginRequestModel> requestEntity = RequestEntity.post(url)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(loginRequestModel);
+
+        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {
+        });
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        Map<String, Object> defaultErrorAttributesMap = responseEntity.getBody();
+        assertThat(defaultErrorAttributesMap)
+                .hasFieldOrProperty("timestamp")
+                .hasFieldOrPropertyWithValue("status", 401)
+                .hasFieldOrPropertyWithValue("error", "Unauthorized")
+                .hasFieldOrProperty("message")
+                .hasFieldOrPropertyWithValue("path", "/login");
+    }
+
+    @Test
+    @DisplayName("When user present in DB tries to login should return OK status")
+    void login_whenUserPresent_mustBeOk() {
+        //given
+        URI url = URI.create(UsersController.BASE_URL);
+        CreateUserRequestModel userRequestModel = CreateUserRequestModel.builder()
+                .firstName("Art")
+                .lastName("Shyshkin")
+                .email("super@example.com")
+                .password("my super secret password with 1 number and A capital letter")
+                .build();
+        ResponseEntity<CreateUserResponseModel> responseEntityCreate = restTemplate.postForEntity(url, userRequestModel, CreateUserResponseModel.class);
+        assertThat(responseEntityCreate.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        url = URI.create("/login");
+        LoginRequestModel loginRequestModel = LoginRequestModel.builder()
+                .email("super@example.com")
+                .password("my super secret password with 1 number and A capital letter")
+                .build();
+
+        //when
+        RequestEntity<LoginRequestModel> requestEntity = RequestEntity.post(url)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(loginRequestModel);
+
+        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {
+        });
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getHeaders().get("token"))
+                .isNotNull()
+                .hasSize(1)
+                .allSatisfy(System.out::println);
+        assertThat(responseEntity.getHeaders().get("userId"))
+                .isNotNull()
+                .hasSize(1)
+                .allSatisfy(System.out::println);
+    }
+
 }
