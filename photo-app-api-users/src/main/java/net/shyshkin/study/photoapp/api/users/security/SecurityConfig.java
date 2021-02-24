@@ -1,5 +1,6 @@
 package net.shyshkin.study.photoapp.api.users.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.shyshkin.study.photoapp.api.users.services.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private AppAuthenticationFilter appAuthenticationFilter() throws Exception {
-        AppAuthenticationFilter authFilter = new AppAuthenticationFilter();
+        AppAuthenticationFilter authFilter = new AppAuthenticationFilter(objectMapper);
         authFilter.setAuthenticationManager(this.authenticationManager());
         return authFilter;
     }

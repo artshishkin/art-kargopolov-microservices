@@ -1,6 +1,7 @@
 package net.shyshkin.study.photoapp.api.users.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import net.shyshkin.study.photoapp.api.users.ui.model.LoginRequestModel;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,12 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+    private final ObjectMapper objectMapper;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             ServletInputStream inputStream = request.getInputStream();
-            LoginRequestModel creds = new ObjectMapper()
+            LoginRequestModel creds = objectMapper
                     .readValue(inputStream, LoginRequestModel.class);
 
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
