@@ -1,4 +1,4 @@
-package net.shyshkin.study.photoapp.api.users.config;
+package net.shyshkin.study.photoapp.api.users.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/**").hasIpAddress(gatewayIp);
+                .antMatchers("/**").hasIpAddress(gatewayIp)
+                .and()
+                .addFilter(appAuthenticationFilter());
 
         //        h2 console config
         http.headers().frameOptions().sameOrigin();
@@ -29,6 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private AppAuthenticationFilter appAuthenticationFilter() throws Exception {
+        AppAuthenticationFilter authFilter = new AppAuthenticationFilter();
+        authFilter.setAuthenticationManager(this.authenticationManager());
+        return authFilter;
     }
 
 }
