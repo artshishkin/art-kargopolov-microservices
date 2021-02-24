@@ -28,3 +28,4 @@ info:
     encoding: '@project.build.sourceEncoding@'
   service:
     name: ${spring.application.name}
+gateway.ip: 192.168.99.1

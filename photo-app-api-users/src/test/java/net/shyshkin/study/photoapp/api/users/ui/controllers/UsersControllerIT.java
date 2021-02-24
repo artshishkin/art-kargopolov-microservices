@@ -19,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
         "eureka.client.register-with-eureka=false",
-        "spring.cloud.discovery.enabled=false"
+        "spring.cloud.discovery.enabled=false",
+        "gateway.ip=127.0.0.1"
 })
 class UsersControllerIT {
 
