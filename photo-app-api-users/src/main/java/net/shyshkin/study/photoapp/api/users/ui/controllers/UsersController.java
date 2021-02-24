@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.shyshkin.study.photoapp.api.users.services.UserService;
 import net.shyshkin.study.photoapp.api.users.shared.UserDto;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
+import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserResponseModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
@@ -29,10 +30,11 @@ public class UsersController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@Valid @RequestBody CreateUserRequestModel user) {
+    public CreateUserResponseModel createUser(@Valid @RequestBody CreateUserRequestModel user) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         UserDto userDto = mapper.map(user, UserDto.class);
-        return userService.createUser(userDto);
+        UserDto userDtoCreated = userService.createUser(userDto);
+        return mapper.map(userDtoCreated, CreateUserResponseModel.class);
     }
 }

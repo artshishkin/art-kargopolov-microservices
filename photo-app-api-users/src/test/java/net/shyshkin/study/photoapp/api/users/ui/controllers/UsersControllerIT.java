@@ -1,8 +1,8 @@
 package net.shyshkin.study.photoapp.api.users.ui.controllers;
 
 import net.shyshkin.study.photoapp.api.users.data.UserRepository;
-import net.shyshkin.study.photoapp.api.users.shared.UserDto;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
+import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserResponseModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +46,12 @@ class UsersControllerIT {
                 .build();
 
         //when
-        ResponseEntity<UserDto> responseEntity = restTemplate.postForEntity(url, userRequestModel, UserDto.class);
+        ResponseEntity<CreateUserResponseModel> responseEntity = restTemplate.postForEntity(url, userRequestModel, CreateUserResponseModel.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        UserDto userDto = responseEntity.getBody();
-        assertThat(userDto).hasNoNullFieldsOrProperties()
+        CreateUserResponseModel userResponseModel = responseEntity.getBody();
+        assertThat(userResponseModel).hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("firstName", userRequestModel.getFirstName())
                 .hasFieldOrPropertyWithValue("lastName", userRequestModel.getLastName())
                 .hasFieldOrPropertyWithValue("email", userRequestModel.getEmail());
