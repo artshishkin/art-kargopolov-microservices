@@ -5,16 +5,21 @@ import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserResponseModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.MediaType.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
@@ -35,8 +40,9 @@ class UsersControllerIT {
         userRepository.deleteAll();
     }
 
-    @Test
-    void createUser() {
+    @ParameterizedTest(name="[{index}] {arguments}")
+    @ValueSource(strings = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
+    void createUser(String mediaTypeString) {
         //given
         URI url = URI.create(UsersController.BASE_URL);
         CreateUserRequestModel userRequestModel = CreateUserRequestModel.builder()
@@ -47,10 +53,15 @@ class UsersControllerIT {
                 .build();
 
         //when
-        ResponseEntity<CreateUserResponseModel> responseEntity = restTemplate.postForEntity(url, userRequestModel, CreateUserResponseModel.class);
+        RequestEntity<CreateUserRequestModel> requestEntity = RequestEntity.post(url)
+                .contentType(MediaType.valueOf(mediaTypeString))
+                .accept(MediaType.valueOf(mediaTypeString))
+                .body(userRequestModel);
+        ResponseEntity<CreateUserResponseModel> responseEntity = restTemplate.exchange(requestEntity, CreateUserResponseModel.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.valueOf(mediaTypeString));
         CreateUserResponseModel userResponseModel = responseEntity.getBody();
         assertThat(userResponseModel).hasNoNullFieldsOrProperties()
                 .hasFieldOrPropertyWithValue("firstName", userRequestModel.getFirstName())

@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
+
 @RestController
 @RequestMapping(UsersController.BASE_URL)
 @RequiredArgsConstructor
@@ -28,7 +31,10 @@ public class UsersController {
         return environment.getProperty("spring.application.name") + " is running on port: " + environment.getProperty("local.server.port");
     }
 
-    @PostMapping
+    @PostMapping(
+            consumes = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE},
+            produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE}
+            )
     @ResponseStatus(HttpStatus.CREATED)
     public CreateUserResponseModel createUser(@Valid @RequestBody CreateUserRequestModel user) {
         ModelMapper mapper = new ModelMapper();
