@@ -6,7 +6,10 @@ spring:
           id: users-status-check
           uri: lb://users-ws
           predicates:
-            - Path=/users/status/check
+            - Path=/users-ws/users/status/check
             - Method=GET
+            - Header=Authorization, Bearer (.*)
           filters:
             - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ws/(?<segment>/?.*), /$\{segment}
+

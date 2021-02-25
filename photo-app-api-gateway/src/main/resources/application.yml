@@ -2,7 +2,7 @@ spring:
   application:
     name: api-gateway
   profiles:
-    include: routing-using-yaml,auto-locator
+    include: routing-using-yaml
 server.port: 8011
 eureka:
   client:

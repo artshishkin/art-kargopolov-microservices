@@ -119,6 +119,19 @@ curl --location --request POST 'http://localhost:8011/users-ws/login' \
 }
 ```        
 
+####  Section 15: Spring Cloud API Gateway - Creating a Custom Filter.
+
+#####  107. Using Header Predicate
+
+-  curl users-ws status check endpoint through gateway
+```shell script
+curl --location --request GET 'http://localhost:8011/users-ws/users/status/check' \
+--header 'Accept: application/json' \
+--header 'Authorization: Bearer 123AnyNum'
+```
+-  got a response 200 OK
+    -  users-ws is running on port: 51997
+-  curl without `Authorization` header -> 404 Error    
 
 
 
