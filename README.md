@@ -165,5 +165,8 @@ curl --location --request GET 'http://localhost:8011/users-ws/users/status/check
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MDg5OTIxMS02NmM4LTRhN2YtOTc5Ni1mYTBkNGVmZjRhMWYiLCJleHAiOjE2MTUxNDk2NzN9.GJDV2PAWMnQDtc_BfqqzhQsqTXu_J14v10P786NwWeQiW7nUmTM4hW2VqhSacIKLe6MJMlcBgG11wOg1AFfVDA'
 ```
 
+####  Section 17: Spring Cloud Config Server - Git Backend
 
-    
+#####  126. Create Private GitHub Repository
+
+-  create **private** Git repository `art-kargopolov-microservices-photo-app-repository`    
