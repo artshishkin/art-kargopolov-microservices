@@ -33,3 +33,5 @@ token:
   expiration_time: 864000000
   secret: blablabla
 login.url.path: /users/login
+
+

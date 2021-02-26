@@ -131,8 +131,39 @@ curl --location --request GET 'http://localhost:8011/users-ws/users/status/check
 ```
 -  got a response 200 OK
     -  users-ws is running on port: 51997
--  curl without `Authorization` header -> 404 Error    
+-  curl without `Authorization` header -> 404 Error
 
+#####  114. Accessing Protected Microservices with Access Token
+    
+-  create new user
+```shell script
+curl --location --request POST 'http://localhost:8011/users-ws/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{    
+    "firstName": "Art",
+    "lastName": "Shyshkin",
+    "email": "myemail@example.com",
+    "password": "my super secret password with 1 number and A capital letter"
+}'
+```
+-  get JSON Web Token by login
+```shell script
+curl --location --request POST 'http://localhost:8011/users-ws/users/login' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "myemail@example.com",
+    "password": "my super secret password with 1 number and A capital letter"
+}'
+```
+-  token is `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MDg5OTIxMS02NmM4LTRhN2YtOTc5Ni1mYTBkNGVmZjRhMWYiLCJleHAiOjE2MTUxNDk2NzN9.GJDV2PAWMnQDtc_BfqqzhQsqTXu_J14v10P786NwWeQiW7nUmTM4hW2VqhSacIKLe6MJMlcBgG11wOg1AFfVDA` 
+-  curl status endpoint
+```shell script
+curl --location --request GET 'http://localhost:8011/users-ws/users/status/check' \
+--header 'Accept: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MDg5OTIxMS02NmM4LTRhN2YtOTc5Ni1mYTBkNGVmZjRhMWYiLCJleHAiOjE2MTUxNDk2NzN9.GJDV2PAWMnQDtc_BfqqzhQsqTXu_J14v10P786NwWeQiW7nUmTM4hW2VqhSacIKLe6MJMlcBgG11wOg1AFfVDA'
+```
 
 
     
