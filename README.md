@@ -220,4 +220,12 @@ I use Docker to run RabbitMQ with management console
 -  `docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 rabbitmq:3-management`
 -  curl to `localhost:15672`
     -  username: `guest`
-    -  password: `guest`  
+    -  password: `guest`
+
+#####  136. Rabbit MQ Default Connection Details
+
+For connection we need port 5672 also:
+-  first remove running container
+    -  `docker container rm some-rabbit -f`       
+-  then start new container
+    -  `docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management`

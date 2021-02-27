@@ -11,6 +11,12 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa
     password:
+  #all defaults - no need to set up
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 server.port: ${PORT:0}
 eureka:
   client:

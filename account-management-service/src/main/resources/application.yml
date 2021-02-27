@@ -1,6 +1,12 @@
 spring:
   application:
     name: account-management-ws
+  #all defaults - no need to set up
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 server:
   port: 0

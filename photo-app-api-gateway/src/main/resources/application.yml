@@ -1,6 +1,12 @@
 spring:
   profiles:
     include: routing-using-yaml
+  #all defaults - no need to set up
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 server.port: 8011
 eureka:
   client:
