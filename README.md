@@ -169,4 +169,48 @@ curl --location --request GET 'http://localhost:8011/users-ws/users/status/check
 
 #####  126. Create Private GitHub Repository
 
--  create **private** Git repository `art-kargopolov-microservices-photo-app-repository`    
+-  create **private** Git repository `art-kargopolov-microservices-photo-app-repository`
+
+#####  129. Adding Properties File to Git Repository
+
+-  GET `localhost:8012/all/default` -> receive global config
+```json
+{
+  "name": "all",
+  "profiles": [
+    "default"
+  ],
+  "label": null,
+  "version": "5c40e68d8952de18f4202a1e355f4c751c04cafd",
+  "state": null,
+  "propertySources": []
+}
+```
+-  added `application.yml` file into `art-kargopolov-microservices-photo-app-repository`
+-  modified token expiration time
+-  push `art-kargopolov-microservices-photo-app-repository`
+-  start `PhotoAppApiConfigServerApplication`
+-  GET `localhost:8012/all/default` -> receive global config
+```json
+{
+  "name": "all",
+  "profiles": [
+    "default"
+  ],
+  "label": null,
+  "version": "84c34699277485e67d2ab8ea2ea420607fd67f0f",
+  "state": null,
+  "propertySources": [
+    {
+      "name": "https://github.com/artshishkin/art-kargopolov-microservices-photo-app-repository/file:C:\\Users\\Admin\\AppData\\Local\\Temp\\config-repo-7475044306187383547\\application.yml",
+      "source": {
+        "gateway.ip": "192.168.99.1",
+        "token.expiration_time": 86400000,
+        "token.secret": "blablabla",
+        "login.url.path": "/users/login"
+      }
+    }
+  ]
+}
+```
+    
