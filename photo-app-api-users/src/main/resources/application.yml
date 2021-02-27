@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: users-ws
   h2:
     console:
       enabled: true
@@ -34,4 +32,8 @@ token:
   secret: blablabla
 login.url.path: /users/login
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

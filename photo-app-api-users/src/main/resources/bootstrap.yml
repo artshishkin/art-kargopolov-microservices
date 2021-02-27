@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: users-ws
+  cloud:
+    config:
+#      name: config-server
+      uri: http://localhost:8012
+      fail-fast: true
+
