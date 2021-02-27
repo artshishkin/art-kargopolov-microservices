@@ -239,3 +239,24 @@ For connection we need port 5672 also:
 -  POST to http://localhost:8012/actuator/busrefresh with empty body
 -  curl to status check endpoint -> view tokenSecret
     -  `users-ws is running on port: 61916. Token secret: modifiedTokenSecret`  
+
+#####  138. Change default Rabbit MQ Password
+
+-  Approach 1:
+    -  `docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password  -p 15672:15672 -p 5672:5672 rabbitmq:3-management`
+-  Approach 2:
+    -  log in into management console: localhost:15672
+    -  Admin -> Add a user
+        -  Name: art
+        -  Password: 123
+        -  Role: administrator
+        -  Add user
+    -  Set up permissions for this user
+        -  Click on name
+        -  Choose permissions
+        -  Update user
+    -  Log out
+    -  Log in as new user
+    
+    
+    
