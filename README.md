@@ -213,4 +213,11 @@ curl --location --request GET 'http://localhost:8011/users-ws/users/status/check
   ]
 }
 ```
-    
+
+#####  135. Download and Run Rabbit MQ
+
+I use Docker to run RabbitMQ with management console
+-  `docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 rabbitmq:3-management`
+-  curl to `localhost:15672`
+    -  username: `guest`
+    -  password: `guest`  
