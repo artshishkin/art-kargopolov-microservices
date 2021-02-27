@@ -229,3 +229,13 @@ For connection we need port 5672 also:
     -  `docker container rm some-rabbit -f`       
 -  then start new container
     -  `docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management`
+
+#####  137. Trying how Spring Cloud Bus Works
+
+-  start all services
+-  create new user (POST through gateway to `users-ws`)  
+-  log in -> copy JWT
+-  curl to status check endpoint -> view tokenSecret
+-  POST to http://localhost:8012/actuator/busrefresh with empty body
+-  curl to status check endpoint -> view tokenSecret
+    -  `users-ws is running on port: 61916. Token secret: modifiedTokenSecret`  

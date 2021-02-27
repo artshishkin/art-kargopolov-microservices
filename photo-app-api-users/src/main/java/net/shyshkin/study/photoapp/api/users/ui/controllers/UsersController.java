@@ -28,13 +28,16 @@ public class UsersController {
 
     @GetMapping("/status/check")
     public String status() {
-        return environment.getProperty("spring.application.name") + " is running on port: " + environment.getProperty("local.server.port");
+        String appName = environment.getProperty("spring.application.name");
+        Integer port = environment.getProperty("local.server.port", Integer.TYPE);
+        String tokenSecret = environment.getProperty("token.secret");
+        return String.format("%s is running on port: %s. Token secret: %s", appName, port, tokenSecret);
     }
 
     @PostMapping(
             consumes = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE},
             produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE}
-            )
+    )
     @ResponseStatus(HttpStatus.CREATED)
     public CreateUserResponseModel createUser(@Valid @RequestBody CreateUserRequestModel user) {
         ModelMapper mapper = new ModelMapper();
