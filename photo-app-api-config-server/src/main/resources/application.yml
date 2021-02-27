@@ -1,0 +1,21 @@
+spring.application.name: config-server
+server.port: 8012
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/artshishkin/art-kargopolov-microservices-photo-app-repository
+          username: artshishkin
+          password: 'PasswordInEnvironmentVariable(or Token - better)'
+          clone-on-start: true
+          default-label: main
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  level:
+    org.springframework.cloud: debug
+    org.springframework.web: debug
