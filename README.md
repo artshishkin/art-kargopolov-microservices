@@ -471,4 +471,10 @@ For connection we need port 5672 also:
 }
 ```
 
+####  Section 22: Using MySQL Instead of In-Memory Database
 
+#####  150. Download and Install MySQL
+
+I use Docker to start MySQL server (even though I have MySQL installed)
+-  `docker run --name photo-app-api -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_USER=photo_app_user -e MYSQL_PASSWORD=photo_app_password -e MYSQL_DATABASE=photo_app_db -v photo-app-volume:/var/lib/mysql -p 23306:3306 -d mysql:8.0.23`
+    -  I have port 3306 is busy so I choose to use 23306 
