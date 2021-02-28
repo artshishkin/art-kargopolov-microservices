@@ -304,3 +304,114 @@ For connection we need port 5672 also:
 -  view users-ws config
     -  localhost:8012/users-ws/default    
        
+####  Section 21: Spring Boot Actuator - A Quick Start
+
+#####  146. Add Spring Boot Actuator to API Gateway
+
+-  `http://192.168.99.1:8011/actuator/gateway/globalfilters`
+```json
+{
+  "net.shyshkin.study.photoapp.api.gateway.MyPreFilter@6f9323e2": 0,
+  "net.shyshkin.study.photoapp.api.gateway.GlobalFilterConfiguration$$Lambda$563/0x0000000800564c40@44791e7a": null,
+  "net.shyshkin.study.photoapp.api.gateway.GlobalFilterConfiguration$$Lambda$562/0x0000000800564840@67b4a00d": null,
+  "org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter@4d525ac6": 10150,
+  "net.shyshkin.study.photoapp.api.gateway.MyPostFilter@ed8ef21": 0,
+  "org.springframework.cloud.gateway.filter.ForwardPathFilter@11bddaff": 0,
+  "net.shyshkin.study.photoapp.api.gateway.GlobalFilterConfiguration$$Lambda$561/0x0000000800565440@1c0dc436": null,
+  "org.springframework.cloud.gateway.filter.NettyRoutingFilter@4e4529fe": 2147483647,
+  "org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@29146dd4": -2147483648,
+  "org.springframework.cloud.gateway.filter.ForwardRoutingFilter@65fa9289": 2147483647,
+  "net.shyshkin.study.photoapp.api.gateway.GlobalFilterConfiguration$1@358ef294": null,
+  "org.springframework.cloud.gateway.filter.GatewayMetricsFilter@6b027981": 0,
+  "org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@1df78d75": -1,
+  "org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@1a4ce3f0": 10000,
+  "org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@1e2b78d7": 2147483646,
+  "org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@55ecd0e6": -2147482648
+}
+```
+-  `http://192.168.99.1:8011/actuator/gateway/routefilters`
+```json
+{
+  "[AddResponseHeaderGatewayFilterFactory@51905668 configClass = AbstractNameValueGatewayFilterFactory.NameValueConfig]": null,
+  "[PrefixPathGatewayFilterFactory@2cf7ef55 configClass = PrefixPathGatewayFilterFactory.Config]": null,
+  "[RewriteLocationResponseHeaderGatewayFilterFactory@26155cb2 configClass = RewriteLocationResponseHeaderGatewayFilterFactory.Config]": null,
+  "[AuthorizationHeaderFilter@201494b8 configClass = AuthorizationHeaderFilter.Config]": null,
+  "[AddRequestParameterGatewayFilterFactory@7f9796fb configClass = AbstractNameValueGatewayFilterFactory.NameValueConfig]": null,
+  "[ModifyRequestBodyGatewayFilterFactory@873eaa5 configClass = ModifyRequestBodyGatewayFilterFactory.Config]": null,
+  "[SetResponseHeaderGatewayFilterFactory@5a0d84c configClass = AbstractNameValueGatewayFilterFactory.NameValueConfig]": null,
+  "[RequestHeaderSizeGatewayFilterFactory@7a3fa9d8 configClass = RequestHeaderSizeGatewayFilterFactory.Config]": null,
+  "[RequestSizeGatewayFilterFactory@3be784db configClass = RequestSizeGatewayFilterFactory.RequestSizeConfig]": null,
+  "[ModifyResponseBodyGatewayFilterFactory@41a018b3 configClass = ModifyResponseBodyGatewayFilterFactory.Config]": null,
+  "[SetPathGatewayFilterFactory@6bb14bee configClass = SetPathGatewayFilterFactory.Config]": null,
+  "[DedupeResponseHeaderGatewayFilterFactory@43f6513 configClass = DedupeResponseHeaderGatewayFilterFactory.Config]": null,
+  "[RemoveRequestParameterGatewayFilterFactory@661cb690 configClass = AbstractGatewayFilterFactory.NameConfig]": null,
+  "[RemoveResponseHeaderGatewayFilterFactory@16381bca configClass = AbstractGatewayFilterFactory.NameConfig]": null,
+  "[SetRequestHostHeaderGatewayFilterFactory@d7a694e configClass = SetRequestHostHeaderGatewayFilterFactory.Config]": null,
+  "[RetryGatewayFilterFactory@15344ef6 configClass = RetryGatewayFilterFactory.RetryConfig]": null,
+  "[SpringCloudCircuitBreakerResilience4JFilterFactory@3b78ccad configClass = SpringCloudCircuitBreakerFilterFactory.Config]": null,
+  "[SetRequestHeaderGatewayFilterFactory@3f3efee6 configClass = AbstractNameValueGatewayFilterFactory.NameValueConfig]": null,
+  "[FallbackHeadersGatewayFilterFactory@3e911756 configClass = FallbackHeadersGatewayFilterFactory.Config]": null,
+  "[SaveSessionGatewayFilterFactory@2a529a28 configClass = Object]": null,
+  "[RewriteResponseHeaderGatewayFilterFactory@7e15d44a configClass = RewriteResponseHeaderGatewayFilterFactory.Config]": null,
+  "[RemoveRequestHeaderGatewayFilterFactory@1c03049b configClass = AbstractGatewayFilterFactory.NameConfig]": null,
+  "[StripPrefixGatewayFilterFactory@22a8d0d5 configClass = StripPrefixGatewayFilterFactory.Config]": null,
+  "[PreserveHostHeaderGatewayFilterFactory@b2861eb configClass = Object]": null,
+  "[RewritePathGatewayFilterFactory@10e60330 configClass = RewritePathGatewayFilterFactory.Config]": null,
+  "[SecureHeadersGatewayFilterFactory@37a21cad configClass = SecureHeadersGatewayFilterFactory.Config]": null,
+  "[RequestHeaderToRequestUriGatewayFilterFactory@5edcc5af configClass = AbstractGatewayFilterFactory.NameConfig]": null,
+  "[MapRequestHeaderGatewayFilterFactory@5b258dcf configClass = MapRequestHeaderGatewayFilterFactory.Config]": null,
+  "[SetStatusGatewayFilterFactory@2a3acfc6 configClass = SetStatusGatewayFilterFactory.Config]": null,
+  "[AddRequestHeaderGatewayFilterFactory@506c2d8 configClass = AbstractNameValueGatewayFilterFactory.NameValueConfig]": null,
+  "[RedirectToGatewayFilterFactory@2cfb85fc configClass = RedirectToGatewayFilterFactory.Config]": null
+}
+```
+-  `http://192.168.99.1:8011/actuator/gateway/routes`
+```json
+[
+  {
+    "predicate": "((Paths: [/users-ws/users/status/check], match trailing slash: true && Methods: [GET]) && Header: Authorization regexp=Bearer (.*))",
+    "route_id": "users-status-check",
+    "filters": [
+      "[[RemoveRequestHeader name = 'Cookie'], order = 1]",
+      "[[RewritePath /users-ws/(?<segment>/?.*) = '/${segment}'], order = 2]",
+      "[net.shyshkin.study.photoapp.api.gateway.AuthorizationHeaderFilter$1@72011d38, order = 3]"
+    ],
+    "uri": "lb://users-ws",
+    "order": 0
+  },
+  {
+    "predicate": "(Paths: [/users-ws/users], match trailing slash: true && Methods: [POST])",
+    "route_id": "users-ws",
+    "filters": [
+      "[[RemoveRequestHeader name = 'Cookie'], order = 1]",
+      "[[RewritePath /users-ws/(?<segment>/?.*) = '/${segment}'], order = 2]"
+    ],
+    "uri": "lb://users-ws",
+    "order": 0
+  },
+  {
+    "predicate": "(Paths: [/users-ws/users/login], match trailing slash: true && Methods: [POST])",
+    "route_id": "users-ws-login",
+    "filters": [
+      "[[RemoveRequestHeader name = 'Cookie'], order = 1]",
+      "[[RewritePath /users-ws/(?<segment>/?.*) = '/${segment}'], order = 2]"
+    ],
+    "uri": "lb://users-ws",
+    "order": 0
+  },
+  {
+    "predicate": "((Paths: [/users-ws/users/**], match trailing slash: true && Methods: [GET, PUT, DELETE]) && Header: Authorization regexp=Bearer (.*))",
+    "route_id": "users-ws-get-update-delete",
+    "filters": [
+      "[[RemoveRequestHeader name = 'Cookie'], order = 1]",
+      "[[RewritePath /users-ws/(?<segment>/?.*) = '/${segment}'], order = 2]",
+      "[net.shyshkin.study.photoapp.api.gateway.AuthorizationHeaderFilter$1@5bc0d5fe, order = 3]"
+    ],
+    "uri": "lb://users-ws",
+    "order": 0
+  }
+]
+```
+
+
+

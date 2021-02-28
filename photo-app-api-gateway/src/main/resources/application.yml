@@ -27,3 +27,12 @@ token:
 logging:
   level:
     net.shyshkin: debug
+
+management:
+  endpoint:
+    gateway:
+      enabled: true #default value
+  endpoints:
+    web:
+      exposure:
+        include: beans,health,info,gateway
