@@ -258,5 +258,34 @@ For connection we need port 5672 also:
     -  Log out
     -  Log in as new user
     
-    
-    
+#####  141. Previewing Values Returned by Config Server
+
+-  start config server app
+-  curl to
+-  `http://localhost:8012/all/default`
+-  `http://localhost:8012/all/native`
+-  `http://localhost:8012/config-server/native`
+-  `http://localhost:8012/any-app/any-profile`
+```json
+{
+    "name": "any-app",
+    "profiles": [
+        "any-profile"
+    ],
+    "label": null,
+    "version": null,
+    "state": null,
+    "propertySources": [
+        {
+            "name": "file:C:\\Users\\Admin\\IdeaProjects\\Study\\SergeyKargopolov\\MicroservicesCourse\\art-kargopolov-microservices\\photo-app-api-config-native-repo\\application.yml",
+            "source": {
+                "gateway.ip": "192.168.99.1",
+                "token.expiration_time": 86400000,
+                "token.secret": "modifiedTokenSecretFromNativeRepository1",
+                "login.url.path": "/users/login"
+            }
+        }
+    ]
+}
+```
+**We have ONLY common application properties file now.** So it is included into all the apps and profiles.
