@@ -42,4 +42,13 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/users-ws/(?<segment>/?.*), /$\{segment}
             - AuthorizationHeaderFilter
+        -
+          id: users-ws-actuator
+          uri: lb://users-ws
+          predicates:
+            - Path=/users-ws/actuator/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ws/(?<segment>/?.*), /$\{segment}
 
