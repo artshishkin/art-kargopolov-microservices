@@ -14,6 +14,14 @@ spring:
             - RewritePath=/users-ws/(?<segment>/?.*), /$\{segment}
             - AuthorizationHeaderFilter
         -
+          id: users-ws-h2-console
+          uri: lb://users-ws
+          predicates:
+            - Path=/users-ws/h2-console/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ws/(?<segment>/?.*), /$\{segment}
+        -
           id: users-ws
           uri: lb://users-ws
           predicates:
