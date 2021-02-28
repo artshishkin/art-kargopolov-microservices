@@ -3,7 +3,8 @@ spring:
     name: users-ws
   cloud:
     config:
-#      name: config-server
+# We can skip name because it is match the application name
+      name: users-ws
       uri: http://localhost:8012
       fail-fast: true
 

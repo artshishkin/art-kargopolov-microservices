@@ -1,0 +1,11 @@
+token:
+  expiration_time: 432000000
+net:
+  shyshkin:
+    study:
+      photoapp:
+        api:
+          settings:
+            description: 'Settings from local repository OK users-ws yaml'
+
+

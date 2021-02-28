@@ -289,3 +289,18 @@ For connection we need port 5672 also:
 }
 ```
 **We have ONLY common application properties file now.** So it is included into all the apps and profiles.
+
+####  Section 20: Spring Cloud Config - Configuration for Multiple Microservices
+
+#####  144. Shared and a Microservice specific properties
+
+-  go to http://localhost:8010/
+-  view users-ws info endpoint
+    -  "settings":"Settings from local repository OK users-ws yaml"
+-  modify users-ws.yml settings field
+-  POST to http://localhost:8012/actuator/busrefresh
+-  view users-ws info endpoint
+    -  "settings":"Settings from local repository UPDATED users-ws yaml"
+-  view users-ws config
+    -  localhost:8012/users-ws/default    
+       
