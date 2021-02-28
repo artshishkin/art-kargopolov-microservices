@@ -52,3 +52,14 @@ net:
         api:
           settings:
             description: 'Settings from internal application yaml'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    url: jdbc:mysql://localhost:23306/photo_app_db?serverTimezone=UTC
+    username: photo_app_user
+    password: photo_app_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
