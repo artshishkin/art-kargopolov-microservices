@@ -412,6 +412,63 @@ For connection we need port 5672 also:
   }
 ]
 ```
-
+-  curl to `http://192.168.99.1:8011/actuator/httptrace` twice
+```json
+{
+  "traces": [
+    {
+      "timestamp": "2021-02-28T14:23:13.119005200Z",
+      "principal": null,
+      "session": null,
+      "request": {
+        "method": "GET",
+        "uri": "http://192.168.99.1:8011/actuator/httptrace",
+        "headers": {
+          "Cache-Control": [
+            "max-age=0"
+          ],
+          "Accept": [
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+          ],
+          "Upgrade-Insecure-Requests": [
+            "1"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "User-Agent": [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
+          ],
+          "Host": [
+            "192.168.99.1:8011"
+          ],
+          "Accept-Encoding": [
+            "gzip, deflate"
+          ],
+          "Accept-Language": [
+            "en-US,en;q=0.9,uk;q=0.8,ru;q=0.7"
+          ]
+        },
+        "remoteAddress": null
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "transfer-encoding": [
+            "chunked"
+          ],
+          "Content-Length": [
+            "13"
+          ],
+          "Content-Type": [
+            "application/vnd.spring-boot.actuator.v3+json"
+          ]
+        }
+      },
+      "timeTaken": 97
+    }
+  ]
+}
+```
 
 

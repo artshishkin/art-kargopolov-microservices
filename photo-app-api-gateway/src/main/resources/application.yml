@@ -29,10 +29,13 @@ logging:
     net.shyshkin: debug
 
 management:
+  trace:
+    http:
+      enabled: true #default value
   endpoint:
     gateway:
       enabled: true #default value
   endpoints:
     web:
       exposure:
-        include: beans,health,info,gateway
+        include: beans,health,info,gateway,httptrace
