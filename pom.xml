@@ -15,6 +15,8 @@
         <module>photo-app-api-users</module>
         <module>photo-app-api-gateway</module>
         <module>account-management-service</module>
+        <module>photo-app-api-albums</module>
+        <module>photo-app-api-config-server</module>
     </modules>
 
 </project>
