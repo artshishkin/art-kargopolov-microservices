@@ -515,4 +515,12 @@ curl --location --request POST 'http://localhost:8012/encrypt' \
         -  "invalid.spring.datasource.password": "<n/a>"
         -  "invalid.token.secret": "<n/a>"
         -  java.lang.IllegalStateException: Unable to invoke Cipher due to bad padding
-        -  Caused by: javax.crypto.BadPaddingException: Given final block not properly padded. Such issues can arise if a bad key is used during decryption.            
+        -  Caused by: javax.crypto.BadPaddingException: Given final block not properly padded. Such issues can arise if a bad key is used during decryption.
+
+#####  162. Creating a Keystore for Asymmetric Encryption
+
+-  use [encryption.ps1](encryption\encryption.ps1) for PowerShell
+-  use [encryption.sh](encryption\encryption.sh) for Bash
+
+
+                    
