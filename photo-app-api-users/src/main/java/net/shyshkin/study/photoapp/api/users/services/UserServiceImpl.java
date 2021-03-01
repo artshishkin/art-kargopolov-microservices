@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -42,8 +43,18 @@ public class UserServiceImpl implements UserService {
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return userRepository
                 .findOneByEmail(email)
-                .map(userEntity -> mapper.map(userEntity,UserDto.class))
+                .map(userEntity -> mapper.map(userEntity, UserDto.class))
                 .orElseThrow(() -> new UsernameNotFoundException("User: `" + email + "` not found"));
+    }
+
+    @Override
+    public UserDto getUserDetailsByUserId(UUID userId) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return userRepository
+                .findOneByUserId(userId)
+                .map(userEntity -> mapper.map(userEntity, UserDto.class))
+                .orElseThrow(() -> new EntityNotFoundException("User with userId `" + userId + "` not found"));
     }
 
     @Override

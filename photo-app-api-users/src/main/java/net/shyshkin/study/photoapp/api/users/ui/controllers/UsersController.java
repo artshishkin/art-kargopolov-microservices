@@ -1,10 +1,12 @@
 package net.shyshkin.study.photoapp.api.users.ui.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.photoapp.api.users.services.UserService;
 import net.shyshkin.study.photoapp.api.users.shared.UserDto;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserResponseModel;
+import net.shyshkin.study.photoapp.api.users.ui.model.UserResponseModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
@@ -12,10 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
+@Slf4j
 @RestController
 @RequestMapping(UsersController.BASE_URL)
 @RequiredArgsConstructor
@@ -45,5 +49,17 @@ public class UsersController {
         UserDto userDto = mapper.map(user, UserDto.class);
         UserDto userDtoCreated = userService.createUser(userDto);
         return mapper.map(userDtoCreated, CreateUserResponseModel.class);
+    }
+
+    @GetMapping(value = "{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
+    public UserResponseModel getUser(@PathVariable("userId") UUID userId) {
+        UserDto userDto = userService.getUserDetailsByUserId(userId);
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        UserResponseModel userResponseModel = mapper.map(userDto, UserResponseModel.class);
+        log.debug("Found User: {}", userResponseModel);
+        return userResponseModel;
     }
 }
