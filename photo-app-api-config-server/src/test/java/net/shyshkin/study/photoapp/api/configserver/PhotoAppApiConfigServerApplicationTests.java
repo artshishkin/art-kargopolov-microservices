@@ -1,4 +1,4 @@
-package net.shyshkin.study.photoapp.api.configserver.photoapp.api.configserver;
+package net.shyshkin.study.photoapp.api.configserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
