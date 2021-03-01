@@ -11,6 +11,8 @@ net:
         api:
           settings:
             description: 'Settings from local repo application yaml'
+albums:
+  url: 'http://ALBUMS-WS/users/{userId}/albums'
 
 ---
 spring:
