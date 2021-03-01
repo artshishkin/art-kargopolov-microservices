@@ -31,6 +31,7 @@ import static org.springframework.http.MediaType.*;
         "eureka.client.register-with-eureka=false",
         "spring.cloud.discovery.enabled=false",
         "gateway.ip=127.0.0.1",
+        "spring.cloud.config.enabled=false",
 
         "spring.jpa.properties.hibernate.generate_statistics=true",
         "logging.level.org.hibernate.stat=debug",
