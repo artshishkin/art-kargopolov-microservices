@@ -1,0 +1,4 @@
+spring.application.name: config-server
+server.port: 8012
+encrypt:
+  key: 'D3hknQL5RgxrFHMtrX2wJ3kFrejYWAcv'

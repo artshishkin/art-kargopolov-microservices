@@ -1,5 +1,3 @@
-spring.application.name: config-server
-server.port: 8012
 spring:
 #all defaults - no need to set up
   rabbitmq:
@@ -16,8 +14,6 @@ logging:
   level:
     org.springframework.cloud: debug
     org.springframework.web: debug
-encrypt:
-  key: 'D3hknQL5RgxrFHMtrX2wJ3kFrejYWAcv'
 
 ---
 spring:
