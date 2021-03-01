@@ -16,6 +16,8 @@ logging:
   level:
     org.springframework.cloud: debug
     org.springframework.web: debug
+encrypt:
+  key: 'D3hknQL5RgxrFHMtrX2wJ3kFrejYWAcv'
 
 ---
 spring:

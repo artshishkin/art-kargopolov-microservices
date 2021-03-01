@@ -485,4 +485,34 @@ I use Docker to start MySQL server (even though I have MySQL installed)
     -  localhost:8011/users-ws/h2-console
 -  use settings for MySQL connection
 
-       
+#### Section 23: Encryption and Decryption
+
+#####  161. Symmetric Encryption of Properties
+
+-  Encrypt 
+    -  add `encrypt.key`
+    -  curl config server
+        -  POST `localhost:8012/encrypt`
+        -  body `photo_app_password` (database password)
+```shell script
+curl --location --request POST 'http://localhost:8012/encrypt' \
+--header 'Content-Type: application/json' \
+--data-raw 'photo_app_password'
+```    
+    -  `550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf`  
+-  Decrypt
+    -  curl config server
+        -  POST `localhost:8012/decrypt`
+        -  body `550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf`
+-  Return decrypted values
+    -  modify properties files by using `{cipher}`
+    -  curl http://localhost:8012/users-ws/mysql -> properties decrypted
+-  Test errors in encryptipn
+    -  if wrong encrypted value -> modify `token.secret` to have wrong password
+        -  "invalid.token.secret": "<n/a>"
+        -  java.lang.IllegalArgumentException: Detected a Non-hex character at 129 or 130 position    
+    -  if encrypt.key different
+        -  "invalid.spring.datasource.password": "<n/a>"
+        -  "invalid.token.secret": "<n/a>"
+        -  java.lang.IllegalStateException: Unable to invoke Cipher due to bad padding
+        -  Caused by: javax.crypto.BadPaddingException: Given final block not properly padded. Such issues can arise if a bad key is used during decryption.            

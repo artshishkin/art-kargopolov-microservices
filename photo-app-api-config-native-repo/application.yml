@@ -1,7 +1,7 @@
 gateway.ip: 192.168.99.1
 token:
   expiration_time: 86400000
-  secret: modifiedTokenSecretFromNativeRepository1
+  secret: '{cipher}1f013761e0efc14d82e9efd63dfaa7f35fde3c34a3c20277755c35d369e0d76ab010a532210ab9b9e9644a1471bbf71916e6629be1f039a6f44828528ea45707'
 login.url.path: /users/login
 
 net:

@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:23306/photo_app_db?serverTimezone=UTC
     username: photo_app_user
-    password: photo_app_password
+    password: '{cipher}550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf'
     driver-class-name: com.mysql.cj.jdbc.Driver
 net:
   shyshkin:
@@ -10,4 +10,4 @@ net:
       photoapp:
         api:
           settings:
-            description: 'Settings from local repository MySQL profile (users-ws-mysql.yaml)'
+            description: 'Settings from local encrypted repository MySQL profile (users-ws-mysql.yaml)'
