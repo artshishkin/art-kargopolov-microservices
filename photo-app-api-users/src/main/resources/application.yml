@@ -61,5 +61,5 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:23306/photo_app_db?serverTimezone=UTC
     username: photo_app_user
-    password: '{cipher}550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf'
+#    password: '{cipher}550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf'
     driver-class-name: com.mysql.cj.jdbc.Driver

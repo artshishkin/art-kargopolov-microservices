@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:23306/photo_app_db?serverTimezone=UTC
     username: photo_app_user
-    password: '{cipher}550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf'
+#    password: '{cipher}550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf'
     driver-class-name: com.mysql.cj.jdbc.Driver
 net:
   shyshkin:
@@ -11,3 +11,19 @@ net:
         api:
           settings:
             description: 'Settings from local encrypted repository MySQL profile (users-ws-mysql.yaml)'
+---
+spring:
+  config:
+    activate:
+      on-profile: symmetric
+  datasource:
+    password: '{cipher}550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: asymmetric
+  datasource:
+    password: '{cipher}AQB6VbJCIQ3PIf+RHwqI29VFCjYK73EN+R/ePTpYMu1d59tilmkP0Ezv0JLg/rwJi8UqKnX9p/8dwkXVosEQOT6+QTp9gn7kx3MVFNe0GAx2FM9cKsOoF6rcu5qBtDBAp/ok4XGw4RPfXFE6Jpn6J82YKFdZAH+0aspvhOBUtu0kyQ1LNl9y8keKzyaDoHBzJnAYr9rAGHdljaRQDlrr0ios4sMJloUTUW8rYmZ6+1i0rmq2IgDPn80YFvZHaO+4HcxIyg1hmTKiS1lEc/dB2R2uO5LyMG0quHnDeJ2qGRmdbqSRWwiMtbqESF6GnZRgva5BqQu+FosxahugmtYfH3RGGa5ba3VGlK+f1icdqPWPTvYUto2cNOzmWd1fPGl+l2/3X4uAJH63IK4iGP4yrwWB'
+

@@ -1,4 +1,21 @@
 spring.application.name: config-server
 server.port: 8012
+
+---
+spring:
+  config:
+    activate:
+      on-profile: symmetric
 encrypt:
   key: 'D3hknQL5RgxrFHMtrX2wJ3kFrejYWAcv'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: asymmetric
+encrypt:
+  key-store:
+    location: 'file:///${user.home}\IdeaProjects\Study\SergeyKargopolov\MicroservicesCourse\art-kargopolov-microservices\encryption\apiEncryptionKey.keystore.jks'
+    password: '1q2w3e4r' #it is better to use environment variable
+    alias: apiEncryptionKey

@@ -12,3 +12,22 @@ net:
           settings:
             description: 'Settings from local repo application yaml'
 
+---
+spring:
+  config:
+    activate:
+      on-profile: symmetric
+token:
+  secret: '{cipher}1f013761e0efc14d82e9efd63dfaa7f35fde3c34a3c20277755c35d369e0d76ab010a532210ab9b9e9644a1471bbf71916e6629be1f039a6f44828528ea45707'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: asymmetric
+token:
+  secret: '{cipher}AQDeAUmV2r8kFQuxY+gEuY94mT3/a2cy9hzoceMnDeAG6RYoDjIEcC4gIvnIKUDhpjSCYI+4XaVf6xoiqLOV3NzyUauIfyP+hihQIki3Fvct8VIwsSIZ37ijyT6PY2WbP8t/ZanjZ/4kLasuR1WyKx/1IB0HJ5XtdregmWiNw7uSrgLaXJGEGSccQp3VycTcmqBzGq6gNBcWl1pcbyyn0fgyjqIdpm75yt6FRbf5KoPtRnsw5fsLtgxXXdrqxSHbFl3Vm2AlIMdp8KYKW1776ib+VWiupASo0B+xt/Bnd9bdu0gooKZT7JkzVF9ztFrudYPEx5wc/APciNpNrHCQc4fpAJGQASPzBezxpsHw/OmpGnv9Oc+sR+/CgWhyYQ1i15+A+i97xNiZ7RwWRgJ/HobLses7gHf6ZXnsbOL0/8gClg=='
+
+
+
+
