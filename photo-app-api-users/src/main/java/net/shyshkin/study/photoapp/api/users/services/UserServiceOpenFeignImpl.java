@@ -1,6 +1,5 @@
 package net.shyshkin.study.photoapp.api.users.services;
 
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.photoapp.api.users.data.UserRepository;
 import net.shyshkin.study.photoapp.api.users.shared.UserDto;
@@ -12,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,12 +38,15 @@ public class UserServiceOpenFeignImpl extends AbstractUserService {
                 .map(userEntity -> mapper.map(userEntity, UserDto.class))
                 .orElseThrow(() -> new EntityNotFoundException("User with userId `" + userId + "` not found"));
 
-        try {
-            List<AlbumResponseModel> albums = albumsServiceClient.getUserAlbums(userId);
-            userDto.setAlbums(albums);
-        } catch (FeignException exception) {
-            log.error(exception.getLocalizedMessage());
-        }
+//        try {
+//            List<AlbumResponseModel> albums = albumsServiceClient.getUserAlbums(userId);
+//            userDto.setAlbums(albums);
+//        } catch (FeignException exception) {
+//            log.error(exception.getLocalizedMessage());
+//        }
+
+        List<AlbumResponseModel> albums = albumsServiceClient.getUserAlbums(userId);
+        userDto.setAlbums(albums);
         return userDto;
     }
 }

@@ -13,6 +13,8 @@ net:
             description: 'Settings from local repo application yaml'
 albums:
   url: 'http://ALBUMS-WS/users/{userId}/albums'
+  exceptions:
+    albums-not-found: "User's albums are not found"
 
 ---
 spring:
