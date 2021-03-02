@@ -11,7 +11,7 @@ import java.util.UUID;
 @FeignClient(name = "albums-ws")
 public interface AlbumsServiceClient {
 
-    @GetMapping("/users/{userId}/albums")
+    @GetMapping("/users/{userId}/albums404")
     List<AlbumResponseModel> getUserAlbums(@PathVariable UUID userId);
 
 }

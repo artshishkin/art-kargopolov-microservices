@@ -522,5 +522,13 @@ curl --location --request POST 'http://localhost:8012/encrypt' \
 -  use [encryption.ps1](encryption\encryption.ps1) for PowerShell
 -  use [encryption.sh](encryption\encryption.sh) for Bash
 
+####  Section 24: Microservices Communication
 
+####  177. Handle FeignException
+
+-  temporarily change URL of Feign Client endpoint to produce 404 error
+-  curl to get user
+    -  `http://localhost:8011/users-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e`
+-  got an error
+    -  `"trace": "feign.FeignException$NotFound: [404] during [GET] to [http://albums-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e/albums404] [AlbumsServiceClient#getUserAlbums(UUID)]:`    
                     
