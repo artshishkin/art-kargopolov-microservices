@@ -54,7 +54,10 @@ net:
             description: 'Settings from internal application yaml'
 logging:
   level:
-    net.shyshkin.study.photoapp.api.users.services.AlbumsServiceClient: debug
+    net.shyshkin.study.photoapp.api.users.services: debug
+feign:
+  circuitbreaker:
+    enabled: true
 ---
 spring:
   config:
