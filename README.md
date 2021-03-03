@@ -524,11 +524,104 @@ curl --location --request POST 'http://localhost:8012/encrypt' \
 
 ####  Section 24: Microservices Communication
 
-####  177. Handle FeignException
+#####  177. Handle FeignException
 
 -  temporarily change URL of Feign Client endpoint to produce 404 error
 -  curl to get user
     -  `http://localhost:8011/users-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e`
 -  got an error
     -  `"trace": "feign.FeignException$NotFound: [404] during [GET] to [http://albums-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e/albums404] [AlbumsServiceClient#getUserAlbums(UUID)]:`    
-                    
+
+#####  181. Trying How Resilience4j ~~Hystrix~~ Circuit Breaker & Feign work
+
+-  start all without `albums-ws`
+-  curl user `http://localhost:8011/users-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e`
+```shell script
+curl --location --request GET 'http://localhost:8011/users-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e' \
+--header 'Accept: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkNDA1ZjVjMC1lM2NhLTQwNTItYTQ5Ny03N2Y1ZDI1MTQ2M2UiLCJleHAiOjE2MTQ5NjgxNDZ9.RTt2Y6tjk07J_hoSoYINhKJGVRFp1_1Tn03cm_tlcOQp_xRwqmLJFxlGgTNM8ch799CpcJh92zDnjJzHhRZhuA'
+```
+-  receive response with
+    -  ` "albums": []` 
+    -  and logs 
+```
+2021-03-03 12:34:59.550 DEBUG 23488 --- [pool-1-thread-4] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] ---> GET http://albums-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e/albums HTTP/1.1
+2021-03-03 12:34:59.550 DEBUG 23488 --- [pool-1-thread-4] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] ---> END HTTP (0-byte body)
+2021-03-03 12:34:59.552  WARN 23488 --- [oundedElastic-3] o.s.c.l.core.RoundRobinLoadBalancer      : No servers available for service: albums-ws
+2021-03-03 12:34:59.552  WARN 23488 --- [pool-1-thread-4] .s.c.o.l.FeignBlockingLoadBalancerClient : Service instance was not resolved, executing the original request
+2021-03-03 12:35:00.562 DEBUG 23488 --- [o-auto-1-exec-8] n.s.s.p.a.u.s.AlbumsServiceFallback      : AlbumsFallback service called for user with id `d405f5c0-e3ca-4052-a497-77f5d251463e`
+```
+-  start `albums-ws`
+-  curl again
+    -  receive response with 3 albums
+    -  and logs
+```
+2021-03-03 12:48:23.001 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] ---> GET http://albums-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e/albums HTTP/1.1
+2021-03-03 12:48:23.001 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] ---> END HTTP (0-byte body)
+2021-03-03 12:48:23.007 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] <--- HTTP/1.1 200 (6ms)
+2021-03-03 12:48:23.007 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] connection: keep-alive
+2021-03-03 12:48:23.007 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] content-type: application/json
+2021-03-03 12:48:23.007 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] date: Wed, 03 Mar 2021 10:48:23 GMT
+2021-03-03 12:48:23.007 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] keep-alive: timeout=60
+2021-03-03 12:48:23.007 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] transfer-encoding: chunked
+2021-03-03 12:48:23.007 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] 
+2021-03-03 12:48:23.008 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] [{"albumId":"album01Id","userId":"d405f5c0-e3ca-4052-a497-77f5d251463e","name":"album 1 name","description":"album 1 description"},{"albumId":"album02Id","userId":"d405f5c0-e3ca-4052-a497-77f5d251463e","name":"album 2 name","description":"album 2 description"},{"albumId":"album03Id","userId":"d405f5c0-e3ca-4052-a497-77f5d251463e","name":"album 3 name","description":"album 3 description"}]
+2021-03-03 12:48:23.008 DEBUG 22796 --- [pool-1-thread-1] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] <--- END HTTP (391-byte body)
+```    
+-  stop `albums-ws`    
+-  curl again
+-  receive response with
+    -  ` "albums": []` 
+    -  and logs with exception
+```
+2021-03-03 12:49:54.867 DEBUG 22796 --- [o-auto-1-exec-5] n.s.s.p.a.u.s.AlbumsServiceFallback      : AlbumsFallback service called for user with id `d405f5c0-e3ca-4052-a497-77f5d251463e`
+2021-03-03 12:49:55.906  WARN 22796 --- [pool-1-thread-2] .c.RetryAwareServiceInstanceListSupplier : No instances found after removing previously used service instance from the search ([EurekaServiceInstance@15fe485c instance = InstanceInfo [instanceId = albums-ws:ae219b5981c413da04f7b4e7c0c8d9a5, appName = ALBUMS-WS, hostName = localhost, status = UP, ipAddr = 192.168.99.1, port = 63871, securePort = 443, dataCenterInfo = com.netflix.appinfo.MyDataCenterInfo@7835b049]). Returning all found instances.
+2021-03-03 12:49:57.939 DEBUG 22796 --- [pool-1-thread-2] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] <--- ERROR ConnectException: Connection refused: connect (4084ms)
+2021-03-03 12:49:57.941 DEBUG 22796 --- [pool-1-thread-2] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] java.net.ConnectException: Connection refused: connect
+	at java.base/java.net.PlainSocketImpl.waitForConnect(Native Method)
+	at java.base/java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107)
+	at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399)
+	at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242)
+	at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224)
+	at java.base/java.net.Socket.connect(Socket.java:608)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:474)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:569)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:341)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:362)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1253)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1015)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:527)
+	at feign.Client$Default.convertResponse(Client.java:108)
+	at feign.Client$Default.execute(Client.java:104)
+	at org.springframework.cloud.openfeign.loadbalancer.LoadBalancerUtils.executeWithLoadBalancerLifecycleProcessing(LoadBalancerUtils.java:56)
+	at org.springframework.cloud.openfeign.loadbalancer.RetryableFeignBlockingLoadBalancerClient.lambda$execute$2(RetryableFeignBlockingLoadBalancerClient.java:156)
+	at org.springframework.retry.support.RetryTemplate.doExecute(RetryTemplate.java:329)
+	at org.springframework.retry.support.RetryTemplate.execute(RetryTemplate.java:225)
+	at org.springframework.cloud.openfeign.loadbalancer.RetryableFeignBlockingLoadBalancerClient.execute(RetryableFeignBlockingLoadBalancerClient.java:103)
+	at feign.SynchronousMethodHandler.executeAndDecode(SynchronousMethodHandler.java:119)
+	at feign.SynchronousMethodHandler.invoke(SynchronousMethodHandler.java:89)
+	at org.springframework.cloud.openfeign.FeignCircuitBreakerInvocationHandler.lambda$asSupplier$1(FeignCircuitBreakerInvocationHandler.java:99)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+
+2021-03-03 12:49:57.941 DEBUG 22796 --- [pool-1-thread-2] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] <--- END ERROR
+```
+-  another curl does not trigger exception
+```
+2021-03-03 12:53:36.837 DEBUG 22796 --- [pool-1-thread-3] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] ---> GET http://albums-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e/albums HTTP/1.1
+2021-03-03 12:53:36.837 DEBUG 22796 --- [pool-1-thread-3] n.s.s.p.a.u.s.AlbumsServiceClient        : [AlbumsServiceClient#getUserAlbums] ---> END HTTP (0-byte body)
+2021-03-03 12:53:36.839  WARN 22796 --- [oundedElastic-3] o.s.c.l.core.RoundRobinLoadBalancer      : No servers available for service: albums-ws
+2021-03-03 12:53:36.840  WARN 22796 --- [pool-1-thread-3] .s.c.o.l.FeignBlockingLoadBalancerClient : Service instance was not resolved, executing the original request
+2021-03-03 12:53:37.842 DEBUG 22796 --- [o-auto-1-exec-9] n.s.s.p.a.u.s.AlbumsServiceFallback      : AlbumsFallback service called for user with id `d405f5c0-e3ca-4052-a497-77f5d251463e`
+```
+
+
+                   
