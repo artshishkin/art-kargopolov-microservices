@@ -633,4 +633,10 @@ curl --location --request GET 'http://localhost:8011/users-ws/users/d405f5c0-e3c
     -  `2021-03-04 16:21:18.029 ERROR 4452 --- [o-auto-1-exec-1] s.s.p.a.u.s.AlbumsServiceFallbackFactory : Other Error took place: 404 NOT_FOUND "User's albums are not found"`
     -  was `org.springframework.web.server.ResponseStatusException: 404 NOT_FOUND "User's albums are not found"`
     -  we throw it in FeignErrorDecoder
+3.  Disable FeignErrorDecoder
+    -  comment out `@Component` from FeignErrorDecoder
+    -  got expected logs
+```
+2021-03-04 16:29:09.395 ERROR 14160 --- [o-auto-1-exec-2] .s.p.a.u.s.DetailedAlbumsServiceFallback : 404 error took place when getAlbums was called with userId `d405f5c0-e3ca-4052-a497-77f5d251463e`. Error message: [404] during [GET] to [http://albums-ws/users/d405f5c0-e3ca-4052-a497-77f5d251463e/albums404] [AlbumsServiceClient#getUserAlbums(UUID)]: [{"timestamp":"2021-03-04T14:29:09.370+00:00","status":404,"error":"Not Found","message":"No message available","path":"/users/d405f5c0-e3ca-4052-a497-77f5d251463e/albums404"}]
+```        
                    
