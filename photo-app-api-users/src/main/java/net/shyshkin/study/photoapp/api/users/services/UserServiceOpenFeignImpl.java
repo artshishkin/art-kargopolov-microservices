@@ -45,7 +45,9 @@ public class UserServiceOpenFeignImpl extends AbstractUserService {
 //            log.error(exception.getLocalizedMessage());
 //        }
 
+        log.debug("Before calling albums Microservice");
         List<AlbumResponseModel> albums = albumsServiceClient.getUserAlbums(userId);
+        log.debug("After calling albums Microservice");
         userDto.setAlbums(albums);
         return userDto;
     }
