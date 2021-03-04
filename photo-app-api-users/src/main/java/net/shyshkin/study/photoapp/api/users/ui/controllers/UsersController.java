@@ -8,13 +8,13 @@ import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserRequestModel;
 import net.shyshkin.study.photoapp.api.users.ui.model.CreateUserResponseModel;
 import net.shyshkin.study.photoapp.api.users.ui.model.UserResponseModel;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
@@ -29,6 +29,7 @@ public class UsersController {
 
     private final Environment environment;
     private final UserService userService;
+    private final Supplier<ModelMapper> modelMapperFactory;
 
     @GetMapping("/status/check")
     public String status() {
@@ -44,8 +45,8 @@ public class UsersController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public CreateUserResponseModel createUser(@Valid @RequestBody CreateUserRequestModel user) {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ModelMapper mapper = modelMapperFactory.get();
+
         UserDto userDto = mapper.map(user, UserDto.class);
         UserDto userDtoCreated = userService.createUser(userDto);
         return mapper.map(userDtoCreated, CreateUserResponseModel.class);
@@ -55,8 +56,7 @@ public class UsersController {
     public UserResponseModel getUser(@PathVariable("userId") UUID userId) {
         UserDto userDto = userService.getUserDetailsByUserId(userId);
 
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ModelMapper mapper = modelMapperFactory.get();
 
         UserResponseModel userResponseModel = mapper.map(userDto, UserResponseModel.class);
         log.debug("Found User: {}", userResponseModel);

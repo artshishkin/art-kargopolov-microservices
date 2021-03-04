@@ -4,7 +4,6 @@ import net.shyshkin.study.photoapp.api.users.data.UserRepository;
 import net.shyshkin.study.photoapp.api.users.shared.UserDto;
 import net.shyshkin.study.photoapp.api.users.ui.model.AlbumResponseModel;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -16,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static org.springframework.http.HttpMethod.GET;
 
@@ -29,16 +29,21 @@ public class UserServiceRestTemplateImpl extends AbstractUserService {
     private final RestTemplate restTemplate;
     private final Environment environment;
 
-    public UserServiceRestTemplateImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RestTemplate restTemplate, Environment environment) {
-        super(userRepository, passwordEncoder);
+    public UserServiceRestTemplateImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, Supplier<ModelMapper> modelMapperFactory, RestTemplate restTemplate, Environment environment) {
+        super(userRepository, passwordEncoder, modelMapperFactory);
         this.restTemplate = restTemplate;
         this.environment = environment;
     }
 
+//    public UserServiceRestTemplateImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RestTemplate restTemplate, Environment environment) {
+//        super(userRepository, passwordEncoder);
+//        this.restTemplate = restTemplate;
+//        this.environment = environment;
+//    }
+
     @Override
     public UserDto getUserDetailsByUserId(UUID userId) {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ModelMapper mapper = modelMapperFactory.get();
 
         UserDto userDto = userRepository
                 .findOneByUserId(userId)

@@ -5,7 +5,6 @@ import net.shyshkin.study.photoapp.api.users.data.UserRepository;
 import net.shyshkin.study.photoapp.api.users.shared.UserDto;
 import net.shyshkin.study.photoapp.api.users.ui.model.AlbumResponseModel;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -23,15 +23,15 @@ public class UserServiceOpenFeignImpl extends AbstractUserService {
 
     public UserServiceOpenFeignImpl(UserRepository userRepository,
                                     PasswordEncoder passwordEncoder,
+                                    Supplier<ModelMapper> modelMapperFactory,
                                     AlbumsServiceClient albumsServiceClient) {
-        super(userRepository, passwordEncoder);
+        super(userRepository, passwordEncoder, modelMapperFactory);
         this.albumsServiceClient = albumsServiceClient;
     }
 
     @Override
     public UserDto getUserDetailsByUserId(UUID userId) {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ModelMapper mapper = modelMapperFactory.get();
 
         UserDto userDto = userRepository
                 .findOneByUserId(userId)
