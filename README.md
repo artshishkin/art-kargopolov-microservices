@@ -623,5 +623,14 @@ curl --location --request GET 'http://localhost:8011/users-ws/users/d405f5c0-e3c
 2021-03-03 12:53:37.842 DEBUG 22796 --- [o-auto-1-exec-9] n.s.s.p.a.u.s.AlbumsServiceFallback      : AlbumsFallback service called for user with id `d405f5c0-e3ca-4052-a497-77f5d251463e`
 ```
 
+#####  182. Error Handling with Feign ~~Hystrix~~ Resilience4j FallbackFactory
 
+1.  Start without `albums-ws`
+    -  Expected `FeignException` (Kargopolov had with Hystrix) but was
+        -  `java.util.concurrent.TimeoutException: TimeLimiter 'UNDEFINED' recorded a timeout exception.`
+2.  Start with `albums-ws` but with wrong Endpoint
+    -  `"/users/{userId}/albums404"`
+    -  `2021-03-04 16:21:18.029 ERROR 4452 --- [o-auto-1-exec-1] s.s.p.a.u.s.AlbumsServiceFallbackFactory : Other Error took place: 404 NOT_FOUND "User's albums are not found"`
+    -  was `org.springframework.web.server.ResponseStatusException: 404 NOT_FOUND "User's albums are not found"`
+    -  we throw it in FeignErrorDecoder
                    
