@@ -654,4 +654,7 @@ I used Docker to start Zipkin server:
 -  also test official prebuild images
     -  [compose-zipkin-official-learning.yml](compose/compose-zipkin-official-learning.yml)
 
-                   
+#####  187. View Traces in Zipkin
+
+-  We can save traces in JSON like [96ebd8dcbf55db2c.json](zipkin/96ebd8dcbf55db2c.json)
+-  And then upload it to view trace by another team member                 
