@@ -7,6 +7,12 @@ spring:
     port: 5672
     username: guest
     password: guest
+  zipkin:
+    enabled: true
+  sleuth:
+    reactor:
+      instrumentation-type: decorate_on_each # Less performing and deprecated. Will be removed in Sleuth 4.0.0
+
 server.port: 8011
 eureka:
   client:
@@ -39,3 +45,4 @@ management:
     web:
       exposure:
         include: beans,health,info,gateway,httptrace
+
