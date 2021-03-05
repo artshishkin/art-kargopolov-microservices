@@ -644,5 +644,14 @@ curl --location --request GET 'http://localhost:8011/users-ws/users/d405f5c0-e3c
     -  got an error  
     -  `2021-03-04 16:48:18.541 ERROR 6188 --- [o-auto-1-exec-3] s.s.p.a.u.s.AlbumsServiceFallbackFactory : Other Error took place: `TimeLimiter 'UNDEFINED' recorded a timeout exception.``
 
+####  Section 25: Distributed Tracing with Sleuth and Zipkin
+
+#####  186. Startup Zipkin Server
+
+I used Docker to start Zipkin server:
+-  `docker run -d -p 9411:9411 openzipkin/zipkin`
+-  **OR** use [docker-compose.yml](compose\docker-compose.yml) file
+-  also test official prebuild images
+    -  [compose-zipkin-official-learning.yml](compose/compose-zipkin-official-learning.yml)
 
                    
