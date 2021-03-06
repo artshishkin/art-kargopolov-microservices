@@ -27,6 +27,15 @@ services:
       elasticsearch:
         condition: service_healthy
 
+  #  docker run --link YOUR_ELASTICSEARCH_CONTAINER_NAME_OR_ID:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.10.2
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    ports: ["5601:5601"]
+    restart: on-failure
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
 #  docker run --name photo-app-api -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_USER=photo_app_user -e MYSQL_PASSWORD=photo_app_password -e MYSQL_DATABASE=photo_app_db -v photo-app-volume:/var/lib/mysql -p 23306:3306 -d mysql:8.0.23
   mysql:
     image: mysql:8.0.23
