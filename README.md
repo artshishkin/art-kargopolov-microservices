@@ -676,4 +676,19 @@ yellow open albums-ws-2021.03.06 s01uWUeLR0ahtEyqQEebAA 1 1 1 0 7.6kb 7.6kb
 -  search for logs with message that contains Eureka
     -  `http://localhost:9200/users-ws-2021.03.06/_search?q=message:Eureka`    
 
-                
+#####  195. View Aggregated Logs in Kibana
+
+-  Create index patterns
+    -  `http://localhost:5601` ->
+        -  Kibana -> Discover -> Index patterns -> Create index pattern
+    -  **OR**
+    -  `http://localhost:5601/app/management/kibana/indexPatterns`
+    -  Create index pattern for
+        -  `users-ws` :  `users-ws-*`                
+        -  `albums-ws` :  `albums-ws-*`
+    -  Timefield -> `@timestamp`
+-  Search
+    -  Kibana -> Discover
+    -  Choose Index (users or albums)
+    -  Available fields -> Add
+    -  Search for message to contain Eureka -> `message : Eureka`                    
