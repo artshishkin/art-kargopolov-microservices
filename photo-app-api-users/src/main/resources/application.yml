@@ -63,6 +63,9 @@ net:
 logging:
   level:
     net.shyshkin.study.photoapp.api.users.services: debug
+  file:
+    name: logs/users-ws.log
+
 feign:
   circuitbreaker:
     enabled: true
