@@ -16,6 +16,15 @@ albums:
   exceptions:
     albums-not-found: "User's albums are not found"
 
+app:
+  eureka:
+    security:
+      user:
+        name: '{cipher}AQAC5vLn38pC5xOxDaUVYof4w8WgytS99rHRrZ5jU5CENbdOXWUXnCuc9FtJxgZUf6BoGOC2WDsvJPbO1u4bwMgMFe+jXbYJZ22zA7YXQj8X3TtXg0WJt784kBYzRk2MN7ZbtazxonHBeFqr3oDH7JbR60pOK879dSxnXxjUsbCzqptKgmZDwocqylC5d7um5KHyNe10CoVgBKjTuFoRJGfc5thX1Y5NYKYq9btYHZMJqjjsg8OMRvrb99bg/JW7mE+2zKzTiKGGHKCDuLGzO92N7FCvY6yLMWPgu/0oTaLuffaMAwIIhZVP4CkmPZx4Rt1qcd3yRqDKlxy/qzkl4+jKKE6tbA/8Us/U4ntfW2p2DYkdIgSHsmTmf1vqK8Eb7j0='
+        password: '{cipher}AQDZKqOK85ZAX7+CIpUvvWdu/H9Purlepy9Hj09qYVH4pvEHKEZAlAxZmGzeJ6RzxjUqPEIsJOkAA0fDZszpvTUZKcyI5CXVUmMZu8340K0kFAqWZDXc0n2+/5/OmasNB8lUWY4cuf3SheJyT4Arz0gkmcujVaVkQABzTnQ7KkNyJubfiJ1VZtTpcE6VwMcqXaCtUxdk0BTbdH9jtUa6PiDePeZKPsDUN15lt9SiCP/6GVojqDBhQhKCsaqhtNOgbDsC/adi4vQP9LpFrqjLLEHrylKu+Q6Ks2NSHeoybIfWbTeX8R9e8CA6KNA++N8op6AanRMgpwkUblYmd79n3+Ar+colVJLFuBbUPfIABTQHCDO2uSZLiJnYUobUKAqFkng='
+
+eureka.client.serviceUrl.defaultZone: http://${app.eureka.security.user.name}:${app.eureka.security.user.password}@localhost:8010/eureka
+
 ---
 spring:
   config:
@@ -23,6 +32,13 @@ spring:
       on-profile: symmetric
 token:
   secret: '{cipher}1f013761e0efc14d82e9efd63dfaa7f35fde3c34a3c20277755c35d369e0d76ab010a532210ab9b9e9644a1471bbf71916e6629be1f039a6f44828528ea45707'
+app:
+  eureka:
+    security:
+      user:
+        name: '{cipher}c12a98933c931895434ebe47bec3f494200f3d8d6808b43a5196dd255a48c21c'
+        password: '{cipher}368ad03ad9e317d7932aedeeacb442f8484ace070dfefc5d6e609736a1301507'
+
 
 ---
 spring:
@@ -31,6 +47,12 @@ spring:
       on-profile: asymmetric
 token:
   secret: '{cipher}AQDeAUmV2r8kFQuxY+gEuY94mT3/a2cy9hzoceMnDeAG6RYoDjIEcC4gIvnIKUDhpjSCYI+4XaVf6xoiqLOV3NzyUauIfyP+hihQIki3Fvct8VIwsSIZ37ijyT6PY2WbP8t/ZanjZ/4kLasuR1WyKx/1IB0HJ5XtdregmWiNw7uSrgLaXJGEGSccQp3VycTcmqBzGq6gNBcWl1pcbyyn0fgyjqIdpm75yt6FRbf5KoPtRnsw5fsLtgxXXdrqxSHbFl3Vm2AlIMdp8KYKW1776ib+VWiupASo0B+xt/Bnd9bdu0gooKZT7JkzVF9ztFrudYPEx5wc/APciNpNrHCQc4fpAJGQASPzBezxpsHw/OmpGnv9Oc+sR+/CgWhyYQ1i15+A+i97xNiZ7RwWRgJ/HobLses7gHf6ZXnsbOL0/8gClg=='
+app:
+  eureka:
+    security:
+      user:
+        name: '{cipher}AQAC5vLn38pC5xOxDaUVYof4w8WgytS99rHRrZ5jU5CENbdOXWUXnCuc9FtJxgZUf6BoGOC2WDsvJPbO1u4bwMgMFe+jXbYJZ22zA7YXQj8X3TtXg0WJt784kBYzRk2MN7ZbtazxonHBeFqr3oDH7JbR60pOK879dSxnXxjUsbCzqptKgmZDwocqylC5d7um5KHyNe10CoVgBKjTuFoRJGfc5thX1Y5NYKYq9btYHZMJqjjsg8OMRvrb99bg/JW7mE+2zKzTiKGGHKCDuLGzO92N7FCvY6yLMWPgu/0oTaLuffaMAwIIhZVP4CkmPZx4Rt1qcd3yRqDKlxy/qzkl4+jKKE6tbA/8Us/U4ntfW2p2DYkdIgSHsmTmf1vqK8Eb7j0='
+        password: '{cipher}AQDZKqOK85ZAX7+CIpUvvWdu/H9Purlepy9Hj09qYVH4pvEHKEZAlAxZmGzeJ6RzxjUqPEIsJOkAA0fDZszpvTUZKcyI5CXVUmMZu8340K0kFAqWZDXc0n2+/5/OmasNB8lUWY4cuf3SheJyT4Arz0gkmcujVaVkQABzTnQ7KkNyJubfiJ1VZtTpcE6VwMcqXaCtUxdk0BTbdH9jtUa6PiDePeZKPsDUN15lt9SiCP/6GVojqDBhQhKCsaqhtNOgbDsC/adi4vQP9LpFrqjLLEHrylKu+Q6Ks2NSHeoybIfWbTeX8R9e8CA6KNA++N8op6AanRMgpwkUblYmd79n3+Ar+colVJLFuBbUPfIABTQHCDO2uSZLiJnYUobUKAqFkng='
 
 
 
