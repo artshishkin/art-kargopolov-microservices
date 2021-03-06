@@ -17,7 +17,7 @@ server.port: 8011
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8010/eureka
+      defaultZone: http://art:123@localhost:8010/eureka
   instance:
     prefer-ip-address: true
 info:
