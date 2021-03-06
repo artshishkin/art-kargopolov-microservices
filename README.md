@@ -657,4 +657,23 @@ I used Docker to start Zipkin server:
 #####  187. View Traces in Zipkin
 
 -  We can save traces in JSON like [96ebd8dcbf55db2c.json](zipkin/96ebd8dcbf55db2c.json)
--  And then upload it to view trace by another team member                 
+-  And then upload it to view trace by another team member 
+
+####  Section 26: Aggregating Log Files with ELK Stack
+
+#####  193. Run Search Query
+
+-  curl `localhost:9200/_cat`
+-  `localhost:9200/_cat/indices`
+```
+yellow open users-ws-2021.03.06  NYsOhpi-THWAQriAOjzt3A 1 1 1 0 7.6kb 7.6kb
+yellow open albums-ws-2021.03.06 s01uWUeLR0ahtEyqQEebAA 1 1 1 0 7.6kb 7.6kb
+```
+-  search for all logs
+    -  `localhost:9200/users-ws-2021.03.06/_search?q=*` -> use Firefox to view
+    -  **OR**
+    -  `localhost:9200/users-ws-2021.03.06/_search?q=*&format&pretty`
+-  search for logs with message that contains Eureka
+    -  `http://localhost:9200/users-ws-2021.03.06/_search?q=message:Eureka`    
+
+                
