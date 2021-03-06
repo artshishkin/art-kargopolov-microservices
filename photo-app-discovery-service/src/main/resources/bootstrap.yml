@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: discovery-service
+  cloud:
+    config:
+# We can skip name because it is match the application name
+      name: discovery-service
+      uri: http://localhost:8012
+      fail-fast: true
+

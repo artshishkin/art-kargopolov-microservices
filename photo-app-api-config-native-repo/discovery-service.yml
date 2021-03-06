@@ -1,0 +1,5 @@
+spring:
+  security:
+    user:
+      name: ${app.eureka.security.user.name}
+      password: ${app.eureka.security.user.password}
