@@ -2,6 +2,15 @@ version: '3.8'
 
 services:
 
+#  docker run --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ docker.elastic.co/logstash/logstash:7.10.1
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.1
+    ports:
+      - 9600:9600
+    volumes:
+      - C:\Users\Admin\IdeaProjects\Study\SergeyKargopolov\MicroservicesCourse\art-kargopolov-microservices\compose\pipeline:/usr/share/logstash/pipeline/
+      - C:\Users\Admin\IdeaProjects\Study\SergeyKargopolov\MicroservicesCourse\art-kargopolov-microservices\logs:/var/log/
+
 #  docker run --name photo-app-api -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_USER=photo_app_user -e MYSQL_PASSWORD=photo_app_password -e MYSQL_DATABASE=photo_app_db -v photo-app-volume:/var/lib/mysql -p 23306:3306 -d mysql:8.0.23
   mysql:
     image: mysql:8.0.23
