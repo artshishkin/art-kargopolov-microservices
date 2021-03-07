@@ -16,6 +16,8 @@
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>2020.0.1</spring-cloud.version>
+        <docker.image.prefix>artarkatesoft</docker.image.prefix>
+        <docker.image.name>${project.artifactId}</docker.image.name>
     </properties>
     <dependencies>
         <dependency>
@@ -71,6 +73,35 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.33.0</version>
+                <configuration>
+                    <!--<dockerHost>unix:///var/run/docker.sock</dockerHost>-->
+                    <!--<dockerHost>http://192.168.1.41:2375</dockerHost>-->
+                    <!--<dockerHost>tcp://localhost:2375</dockerHost>-->
+                    <verbose>true</verbose>
+                    <containerNamePattern>%a</containerNamePattern>
+                    <images>
+                        <image>
+                            <name>${docker.image.prefix}/${docker.image.name}</name>
+                            <alias>${project.artifactId}</alias>
+                            <build>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <dockerFile>Dockerfile</dockerFile>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
