@@ -55,7 +55,7 @@ services:
       config-server:
         condition: service_healthy
       discovery-service:
-        condition: service_started
+        condition: service_healthy
       zipkin:
         condition: service_healthy
 
