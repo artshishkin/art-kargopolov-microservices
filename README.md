@@ -753,4 +753,14 @@ use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker
 docker run -d -p 8010:8010  --restart unless-stopped -e SPRING_CLOUD_CONFIG_URI=http://172.31.38.141:8012 artarkatesoft/photo-app-discovery-service 
 ```
 -  172.31.38.141 - private IP of Config Server
+
+#####  216. Elastic IP address for EC2 Instance
+
+-  EC2 Console ->
+    -  Elastic IPs -> Allocate Elastic IP address -> Allocate
+    -  Change Name: Eureka Server
+    -  Actions -> Associate Elastic IP address ->
+        -  Instance: Eureka Server
+-  Same for Config Server          
+
                         
