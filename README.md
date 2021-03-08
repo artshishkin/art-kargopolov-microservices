@@ -718,5 +718,32 @@ use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker
     -  `http://ec2-52-47-172-113.eu-west-3.compute.amazonaws.com:8012/all/default`
     -  `http://ec2-52-47-172-113.eu-west-3.compute.amazonaws.com:8012/all/asymmetric`
 
+#####  Security group modification
+
+1. Create Security Groups
+    -  microservices-sg (sg-001d7a0c986a520e9)
+        -  SSH: 22 from Everywhere
+    -  micro-config (sg-00fbc332b3514d98d)
+        -  TCP	8012	93.170.219.17/32	Config port from MyIP
+        -  TCP	8012	sg-001d7a0c986a520e9 (microservices-sg)	Config port from SG microservices-sg
+    -  micro-eureka (sg-049dbc54434aaf068)
+        -  TCP	8010	93.170.219.17/32	Eureka 8010 from MyIP
+        -  TCP	8010	sg-001d7a0c986a520e9 (microservices-sg)	Eureka 8010 from microservices-sg        
+    -  micro-rabbit (sg-070fb72fa9ad2541e)
+        -  TCP	15672	93.170.219.17/32	RabbitMQ management port from MyIP	    
+        -  TCP	5672	sg-001d7a0c986a520e9 (microservices-sg)	RabbitMQ AMQP port 5672 from microservices-sg
+2.  Assign security groups to EC2 instances
+    -  Config Server
+        -  microservices-sg
+        -  micro-config
+        -  micro-rabbit
+    -  Eureka Server
+        -  microservices-sg
+        -  micro-eureka
+3.  **OR** we can avoid using microservices-sg and just allow access from CIDR (range of private IPs)
+    -  VPC -> CIDRs ->
+    -  172.31.0.0/16
+    -  and allow access from any IP of this group        
+
 
                         
