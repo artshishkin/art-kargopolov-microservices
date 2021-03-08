@@ -37,5 +37,15 @@ services:
     depends_on:
       - rabbit-mq
 
+  discovery-service:
+    image: artarkatesoft/photo-app-discovery-service
+    ports: ["8010:8010"]
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+
 volumes:
   photo-app-volume:
