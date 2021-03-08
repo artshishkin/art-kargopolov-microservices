@@ -699,6 +699,9 @@ yellow open albums-ws-2021.03.06 s01uWUeLR0ahtEyqQEebAA 1 1 1 0 7.6kb 7.6kb
 
 use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker 
 
+#####  208. Run RabbitMQ Docker Container
 
+-  `docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management`
+-  update security group `microservices-sg` to allow management port (15672) from MyIp and 5672 port from security group
 
                         
