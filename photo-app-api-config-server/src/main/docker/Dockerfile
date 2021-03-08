@@ -18,7 +18,7 @@ EXPOSE 8012
 ENV SPRING_PROFILES_ACTIVE=git,asymmetric
 #ENV SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=ProvidePasswordThroughEnvironmentVariable
 ENV SPRING_RABBITMQ_HOST=rabbit-mq
-ENV ENCRYPT_KEY_STORE_LOCATION=file://apiEncryptionKey.keystore.jks
+ENV ENCRYPT_KEY_STORE_LOCATION=file:///application/apiEncryptionKey.keystore.jks
 
 WORKDIR application
 COPY --from=builder application/dependencies/ ./

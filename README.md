@@ -704,4 +704,19 @@ use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker
 -  `docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management`
 -  update security group `microservices-sg` to allow management port (15672) from MyIp and 5672 port from security group
 
+#####  212. Run Config Server on EC2 from Docker Hub
+
+-  `docker container inspect some-rabbit` -> view "IPAddress": "172.17.0.2"
+-  set env variable to access git 
+    -  `export SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=<insert your password or Token>`
+    -  test that variable is set properly
+        -  echo $SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD
+        -  echo ${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD}
+-  `docker run -d -p 8012:8012 -e SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD} -e SPRING_RABBITMQ_HOST=172.17.0.2 artarkatesoft/photo-app-api-config-server`
+-  modify Security Group to access port 8012 from MyIp
+-  curl to it
+    -  `http://ec2-52-47-172-113.eu-west-3.compute.amazonaws.com:8012/all/default`
+    -  `http://ec2-52-47-172-113.eu-west-3.compute.amazonaws.com:8012/all/asymmetric`
+
+
                         
