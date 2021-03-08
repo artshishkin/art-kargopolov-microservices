@@ -691,4 +691,14 @@ yellow open albums-ws-2021.03.06 s01uWUeLR0ahtEyqQEebAA 1 1 1 0 7.6kb 7.6kb
     -  Kibana -> Discover
     -  Choose Index (users or albums)
     -  Available fields -> Add
-    -  Search for message to contain Eureka -> `message : Eureka`                    
+    -  Search for message to contain Eureka -> `message : Eureka`
+
+####  Section 28: Running Microservices in Docker Containers to AWS EC2
+
+#####  206. Install Docker on AWS EC2
+
+use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker 
+
+
+
+                        
