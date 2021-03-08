@@ -745,5 +745,12 @@ use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker
     -  172.31.0.0/16
     -  and allow access from any IP of this group        
 
+#####  215. Run Eureka in Docker container
 
+-  Create another EC2 instance with [UserData](ec2\UserDataDocker.sh)
+-  Then SSH into it and run docker container
+```shell script
+docker run -d -p 8010:8010  --restart unless-stopped -e SPRING_CLOUD_CONFIG_URI=http://172.31.38.141:8012 artarkatesoft/photo-app-discovery-service 
+```
+-  172.31.38.141 - private IP of Config Server
                         
