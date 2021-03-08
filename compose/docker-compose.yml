@@ -46,6 +46,18 @@ services:
       config-server:
         condition: service_healthy
 
+  api-gateway:
+    image: artarkatesoft/photo-app-api-gateway
+    ports: ["8011:8011"]
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_started
+      zipkin:
+        condition: service_healthy
 
 volumes:
   photo-app-volume:
