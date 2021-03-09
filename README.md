@@ -800,4 +800,15 @@ docker run -d -p 8010:8010  --restart unless-stopped -e SPRING_CLOUD_CONFIG_URI=
         -  microservices-sg
         -  micro-elastic
         -  micro-kibana 
+
+#####  221. Run Kibana and Elastic Search on the same Network
+
+1.  Create network first
+    -  `docker network create --driver bridge api-network`
+2.  Run containers with attached network
+    -  `docker run -d --restart unless-stopped --network api-network -p 9200:9200 -p 9300:9300 -v esdata1:/usr/share/elasticsearch/data -e "discovery.type=single-node" --name elasticsearch docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
+    -  `docker run -d --restart unless-stopped --network api-network -p 5601:5601 docker.elastic.co/kibana/kibana:7.10.1` 
+3.  When creating new EC2 instance
+    -  use [UserDataElasticKibana.sh](ec2\UserDataElasticKibana.sh)        
+
                       
