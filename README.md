@@ -701,7 +701,7 @@ use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker
 
 #####  208. Run RabbitMQ Docker Container
 
--  `docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management`
+-  `docker run -d   --restart unless-stopped  --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management`
 -  update security group `microservices-sg` to allow management port (15672) from MyIp and 5672 port from security group
 
 #####  212. Run Config Server on EC2 from Docker Hub
@@ -712,7 +712,7 @@ use [UserData](ec2\UserDataDocker.sh) to create EC2 instance with Docker
     -  test that variable is set properly
         -  echo $SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD
         -  echo ${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD}
--  `docker run -d -p 8012:8012 -e SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD} -e SPRING_RABBITMQ_HOST=172.17.0.2 artarkatesoft/photo-app-api-config-server`
+-  `docker run -d --restart unless-stopped  -p 8012:8012 -e SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD} -e SPRING_RABBITMQ_HOST=172.17.0.2 artarkatesoft/photo-app-api-config-server`
 -  modify Security Group to access port 8012 from MyIp
 -  curl to it
     -  `http://ec2-52-47-172-113.eu-west-3.compute.amazonaws.com:8012/all/default`
@@ -763,4 +763,18 @@ docker run -d -p 8010:8010  --restart unless-stopped -e SPRING_CLOUD_CONFIG_URI=
         -  Instance: Eureka Server
 -  Same for Config Server          
 
-                        
+#####  218. Run Api Gateway in Docker Container
+
+1. Create new EC2 instance 
+    -  EC2 Console -> choose `Eureka Server` ->
+    -  Actions -> Image and templates -> Launch more like this
+    -  into UserData add command to run `gateway`
+    -  `docker run -d --restart unless-stopped -p 8011:8011 -e SPRING_CLOUD_CONFIG_URI=http://172.31.38.141:8012 -e SPRING_PROFILES_ACTIVE=asymmetric,aws artarkatesoft/photo-app-api-gateway` 
+    -  Tags
+        -  Name: API Gateway
+    -  Security groups
+        -  microservices-sg
+        -  micro-gateway (create before, allow 8011 from anywhere)
+2.  Test it
+    -  curl to http://35.181.51.163:8011/actuator
+    -  view in discovery service - should register                  
