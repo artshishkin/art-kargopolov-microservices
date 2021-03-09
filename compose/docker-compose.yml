@@ -59,5 +59,28 @@ services:
       zipkin:
         condition: service_healthy
 
+  albums-ws:
+    image: artarkatesoft/photo-app-api-albums
+    ports: ["8989:8989"]
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+      SERVER_PORT: 8989
+    volumes:
+      - type: bind
+        source: 'C:\Users\Admin\IdeaProjects\Study\SergeyKargopolov\MicroservicesCourse\art-kargopolov-microservices\logs'
+        target: /application/logs/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/actuator/health"]
+      interval: 20s
+      timeout: 2s
+      retries: 5
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      zipkin:
+        condition: service_healthy
+
 volumes:
   photo-app-volume:
