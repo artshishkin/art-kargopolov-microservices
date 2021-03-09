@@ -777,4 +777,10 @@ docker run -d -p 8010:8010  --restart unless-stopped -e SPRING_CLOUD_CONFIG_URI=
         -  micro-gateway (create before, allow 8011 from anywhere)
 2.  Test it
     -  curl to http://35.181.51.163:8011/actuator
-    -  view in discovery service - should register                  
+    -  view in discovery service - should register
+    
+#####  219. Run Elastic Search in Docker container
+
+-  create Security Group `micro-elastic`
+    -  allow ports 9200 and 9300 to sg `microservices-sg`
+-  `docker run -d --restart unless-stopped -p 9200:9200 -p 9300:9300 -v esdata1:/usr/share/elasticsearch/data -e "discovery.type=single-node" --name elastic docker.elastic.co/elasticsearch/elasticsearch:7.10.1`                      
