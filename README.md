@@ -783,4 +783,21 @@ docker run -d -p 8010:8010  --restart unless-stopped -e SPRING_CLOUD_CONFIG_URI=
 
 -  create Security Group `micro-elastic`
     -  allow ports 9200 and 9300 to sg `microservices-sg`
--  `docker run -d --restart unless-stopped -p 9200:9200 -p 9300:9300 -v esdata1:/usr/share/elasticsearch/data -e "discovery.type=single-node" --name elastic docker.elastic.co/elasticsearch/elasticsearch:7.10.1`                      
+-  `docker run -d --restart unless-stopped -p 9200:9200 -p 9300:9300 -v esdata1:/usr/share/elasticsearch/data -e "discovery.type=single-node" --name elastic docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
+
+#####  220. Run Kibana in Docker Container
+
+1.  create Security Group `micro-kibana`
+    -  allow port 5601 from MyIP
+    -  allow port 5601 from Virtual IP (CIDR 172.31.0.0/16)    
+2.  Commands to start Kibana Docker container (link is **deprecated**)
+    -  `docker run --link <YOUR_ELASTICSEARCH_CONTAINER_NAME_OR_ID>:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.10.1`    
+    -  `docker run -d  --restart unless-stopped --link elastic:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.10.1`
+3.  Create EC2 from Eureka EC2
+    -  change to t2.small
+    -  use [UserDataElasticKibana_deprecated.sh](ec2\UserDataElasticKibana_deprecated.sh)
+    -  attach this EC2 to security groups
+        -  microservices-sg
+        -  micro-elastic
+        -  micro-kibana 
+                      
