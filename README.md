@@ -811,4 +811,25 @@ docker run -d -p 8010:8010  --restart unless-stopped -e SPRING_CLOUD_CONFIG_URI=
 3.  When creating new EC2 instance
     -  use [UserDataElasticKibana.sh](ec2\UserDataElasticKibana.sh)        
 
+#####  223. Run Albums Microservice Docker Image on EC2
+
+-  use [UserDataAlbums.sh](ec2\UserDataAlbums.sh)
+```shell script
+docker run -d --restart unless-stopped -p 8989:8989 \
+    -e SPRING_CLOUD_CONFIG_URI=http://172.31.38.141:8012 \
+    -e SPRING_PROFILES_ACTIVE=asymmetric,aws \
+    -e "server.port=8989" \
+    -v /home/ec2-user/api-logs:/application/logs \
+    artarkatesoft/photo-app-api-albums 
+```
+-  or use `--network host` like in  [UserDataAlbums_useNetworkHost.sh](ec2\UserDataAlbums_useNetworkHost.sh)
+    -  but it is not supported for Mac, Windows
+-  test it
+    -  view eureka (must register)
+    -  ssh to it
+        -  view logs in /home/ec2-user/api-logs
+-  modify security group `micro-albums`
+    -  allow access to all ports (select `All TCP`) from MyIP 
+    -  allow access to all ports (select `All TCP`) from `microservices-sg` or all IPs of VPC (172.31.0.0/16) 
+    
                       
