@@ -846,4 +846,23 @@ docker run -d --restart unless-stopped -p 9600:9600 \
 ```
 -  in `/usr/ec2-user/pipeline` must be present file [logstash-albums.conf](compose/pipeline_aws/logstash-albums.conf) for configuring logstash
 -  use [UserDataAlbumsLogstash.sh](ec2\UserDataAlbumsLogstash.sh) to start t2.small EC2 instance
+
+#####  226. Run MySQL in Docker Container
+
+-  create Security Group `micro-mysql`
+    -  allow port 23306 to `microservices-sg` and `MyIP/24`
+```shell script
+docker run -d --restart unless-stopped -p 23306:3306 \
+    --name photo-app-api \
+    -e MYSQL_RANDOM_ROOT_PASSWORD=yes \
+    -e MYSQL_USER=photo_app_user \
+    -e MYSQL_PASSWORD=photo_app_password \
+    -e MYSQL_DATABASE=photo_app_db \
+    -v photo-app-volume:/var/lib/mysql \
+    mysql:8.0.23 
+```
+-  use [UserDataMySQL.sh](ec2/UserDataMySQL.sh) to create t2.micro EC2 instance
+-  attach SGs
+    -  `micro-mysql`
+    -  `microservices-sg`
                       
