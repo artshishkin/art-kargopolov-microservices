@@ -831,5 +831,19 @@ docker run -d --restart unless-stopped -p 8989:8989 \
 -  modify security group `micro-albums`
     -  allow access to all ports (select `All TCP`) from MyIP 
     -  allow access to all ports (select `All TCP`) from `microservices-sg` or all IPs of VPC (172.31.0.0/16) 
+
+#####  224. Logstash Docker Image for Albums Microservice
+
+Sergey Kargopolov made immutable Docker image for Logstash. I prefer just tune official image and use UserData to create config files in EC2 instance and just run docker image.   
     
+#####  225. Run Logstash in Docker container
+
+```shell script
+docker run -d --restart unless-stopped -p 9600:9600 \
+    -v /home/ec2-user/api-logs:/var/log/ \
+    -v /usr/ec2-user/pipeline:/usr/share/logstash/pipeline/ \
+    docker.elastic.co/logstash/logstash:7.10.1 
+```
+-  in `/usr/ec2-user/pipeline` must be present file [logstash-albums.conf](compose/pipeline_aws/logstash-albums.conf) for configuring logstash
+-  use [UserDataAlbumsLogstash.sh](ec2\UserDataAlbumsLogstash.sh) to start t2.small EC2 instance
                       
