@@ -886,5 +886,15 @@ docker run -d --restart unless-stopped \
 
 -  use [UserDataUsersLogstash.sh](ec2/UserDataUsersLogstash.sh) to start EC2 instance for Users-WS
 
+#####  Run Zipkin on AWS
 
+-  create security group `micro-zipkin`
+    -  allow access to 9411 port from MyIP 
+    -  allow access to 9411 from `microservices-sg` or all IPs of VPC (172.31.0.0/16) 
+```shell script
+docker run -d --restart unless-stopped \
+    -p 9411:9411 \
+    openzipkin/zipkin 
+```
+-  use [UserDataZipkin.sh](ec2/UserDataZipkin.sh) to run Zipkin on t2.micro EC2 instance
                       
