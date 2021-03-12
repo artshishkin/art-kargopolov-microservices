@@ -7,6 +7,7 @@ import net.shyshkin.study.photoapp.api.users.services.UserService;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -46,9 +47,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/actuator/health").permitAll()
 //                .antMatchers("/**").permitAll()
-                .antMatchers("/**").hasIpAddress(gatewayIp)
+                .antMatchers(HttpMethod.POST, "/users").hasIpAddress(gatewayIp)
+                .antMatchers("/h2-console/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .addFilter(appAuthenticationFilter());
+                .addFilter(appAuthenticationFilter())
+                .addFilter(new JwtAuthorizationFilter(this.authenticationManager(), environment));
 
         //        h2 console config
         http.headers().frameOptions().sameOrigin();

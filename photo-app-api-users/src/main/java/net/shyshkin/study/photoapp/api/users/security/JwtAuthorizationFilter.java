@@ -2,7 +2,6 @@ package net.shyshkin.study.photoapp.api.users.security;
 
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +22,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final Environment environment;
 
-    @Value("${authorization.token.header.prefix:Bearer }")
     private String bearerValue;
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, Environment environment) {
@@ -35,6 +33,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String authorizationHeader = request.getHeader(environment.getProperty("authorization.token.header.name", HttpHeaders.AUTHORIZATION));
+        bearerValue = environment.getProperty("authorization.token.header.prefix", "Bearer ");
 
         Optional
                 .ofNullable(authorizationHeader)
