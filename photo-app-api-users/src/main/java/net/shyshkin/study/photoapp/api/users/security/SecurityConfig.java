@@ -2,8 +2,9 @@ package net.shyshkin.study.photoapp.api.users.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.shyshkin.study.photoapp.api.users.services.UserService;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,23 +12,40 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.net.InetAddress;
+
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Value("${gateway.ip}")
-    private String gatewayIp;
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final ObjectMapper objectMapper;
     private final Environment environment;
+    private final ServerProperties serverProperties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        String gatewayIp = environment.getProperty("gateway.ip", "127.0.0.1");
+        if ("all_subnet".equals(gatewayIp)) {
+//            String myIpAddress = environment.getProperty("server.address");
+            InetAddress address = serverProperties.getAddress();
+            if (address == null) {
+                gatewayIp = "0.0.0.0/0";
+            } else {
+                String myIpAddress = address.getHostAddress();
+                int lastDotIndex = myIpAddress.lastIndexOf(".");
+                gatewayIp = myIpAddress.substring(0, lastDotIndex) + ".0/24";
+            }
+        }
+        log.debug("GateWay IP for security {}", gatewayIp);
+
         http.csrf().disable();
         http.authorizeRequests()
-//                .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/actuator/health").permitAll()
+//                .antMatchers("/**").permitAll()
                 .antMatchers("/**").hasIpAddress(gatewayIp)
                 .and()
                 .addFilter(appAuthenticationFilter());
