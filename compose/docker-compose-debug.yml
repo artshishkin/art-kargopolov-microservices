@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+#  docker run --name photo-app-api -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_USER=photo_app_user -e MYSQL_PASSWORD=photo_app_password -e MYSQL_DATABASE=photo_app_db -v photo-app-volume:/var/lib/mysql -p 23306:3306 -d mysql:8.0.23
+  mysql:
+    image: mysql:8.0.23
+    ports: ["23306:3306"]
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_USER: photo_app_user
+      MYSQL_PASSWORD: photo_app_password
+      MYSQL_DATABASE: photo_app_db
+    volumes:
+      - photo-app-volume:/var/lib/mysql
+
+
+#  docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+  rabbit-mq:
+    image: rabbitmq:3-management
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    hostname: my-rabbit
+
+  #  docker run -d -p 9411:9411 openzipkin/zipkin
+  zipkin:
+    image: openzipkin/zipkin
+    ports: ["9411:9411"]
+
+volumes:
+  photo-app-volume:
