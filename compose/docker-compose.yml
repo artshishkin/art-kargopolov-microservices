@@ -40,6 +40,7 @@ services:
   discovery-service:
     image: artarkatesoft/photo-app-discovery-service
     ports: ["8010:8010"]
+    restart: on-failure
     environment:
       SPRING_CLOUD_CONFIG_URI: http://config-server:8012
     depends_on:
@@ -51,6 +52,8 @@ services:
     ports: ["8011:8011"]
     environment:
       SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+      SPRING_PROFILES_ACTIVE: asymmetric
     depends_on:
       config-server:
         condition: service_healthy
@@ -65,12 +68,40 @@ services:
     environment:
       SPRING_CLOUD_CONFIG_URI: http://config-server:8012
       SERVER_PORT: 8989
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
     volumes:
       - type: bind
         source: 'C:\Users\Admin\IdeaProjects\Study\SergeyKargopolov\MicroservicesCourse\art-kargopolov-microservices\logs'
         target: /application/logs/
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8989/actuator/health"]
+      interval: 20s
+      timeout: 2s
+      retries: 5
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      zipkin:
+        condition: service_healthy
+
+  users-ws:
+    image: artarkatesoft/photo-app-api-users
+    ports: ["8999:8999"]
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+      SERVER_PORT: 8999
+      SPRING_PROFILES_ACTIVE: mysql,asymmetric,compose
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+      logging.level.net.shyshkin: debug
+      DEBUG: 'true'
+    volumes:
+      - type: bind
+        source: 'C:\Users\Admin\IdeaProjects\Study\SergeyKargopolov\MicroservicesCourse\art-kargopolov-microservices\logs'
+        target: /application/logs/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8999/actuator/health"]
       interval: 20s
       timeout: 2s
       retries: 5
