@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -61,6 +62,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return null;
         }
         if (userId == null) return null;
-        return new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(UUID.fromString(userId), null, Collections.emptyList());
     }
 }
