@@ -865,4 +865,26 @@ docker run -d --restart unless-stopped -p 23306:3306 \
 -  attach SGs
     -  `micro-mysql`
     -  `microservices-sg`
+
+#####  229. Run Users Microservice in Docker container
+
+-  create security group `micro-users`
+    -  allow access to all ports (select `All TCP`) from MyIP 
+    -  allow access to all ports (select `All TCP`) from `microservices-sg` or all IPs of VPC (172.31.0.0/16) 
+
+```shell script
+docker run -d --restart unless-stopped \
+    -e SPRING_CLOUD_CONFIG_URI=http://172.31.38.141:8012 \
+    -e SPRING_PROFILES_ACTIVE=mysql,asymmetric,aws \
+    -e "logging.level.net.shyshkin=debug" \
+    -v /home/ec2-user/api-logs:/application/logs \
+    --network host \
+    artarkatesoft/photo-app-api-users 
+```
+
+#####  230. Run Logstash for Users Microservice
+
+-  use [UserDataUsersLogstash.sh](ec2/UserDataUsersLogstash.sh) to start EC2 instance for Users-WS
+
+
                       
