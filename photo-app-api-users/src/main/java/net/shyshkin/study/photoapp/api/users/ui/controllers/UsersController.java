@@ -10,7 +10,7 @@ import net.shyshkin.study.photoapp.api.users.ui.model.UserResponseModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -54,7 +54,10 @@ public class UsersController {
     }
 
     @GetMapping(value = "{userId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_XML_VALUE})
-    @PreAuthorize("#userId == principal")
+//    @PreAuthorize("#userId == principal")
+//    @PostAuthorize("#userId == returnObject.getUserId() && #userId == principal")
+    //we can simplify
+    @PostAuthorize("#userId == returnObject.userId && #userId == principal")
     public UserResponseModel getUser(@PathVariable("userId") UUID userId) {
         UserDto userDto = userService.getUserDetailsByUserId(userId);
 
