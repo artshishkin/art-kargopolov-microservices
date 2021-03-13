@@ -17,5 +17,13 @@ spring:
 logging:
   level:
     net.shyshkin: debug
+
+---
+spring:
+  config:
+    activate:
+      on-profile: log-to-file
+
+logging:
   file:
     name: logs/albums-ws.log

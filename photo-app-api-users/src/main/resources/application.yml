@@ -63,8 +63,6 @@ net:
 logging:
   level:
     net.shyshkin.study.photoapp.api.users.services: debug
-  file:
-    name: logs/users-ws.log
 
 feign:
   circuitbreaker:
@@ -79,3 +77,13 @@ spring:
     username: photo_app_user
 #    password: '{cipher}550a97f979335f7b2b42d63218f46e3f290f098984b7bd1a2802f18099608f47d94612935859c70e17effa6f08262cdf'
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+---
+spring:
+  config:
+    activate:
+      on-profile: log-to-file
+
+logging:
+  file:
+    name: logs/users-ws.log

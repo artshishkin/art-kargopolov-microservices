@@ -19,6 +19,9 @@
         <spring-cloud.version>2020.0.1</spring-cloud.version>
         <docker.image.prefix>artarkatesoft</docker.image.prefix>
         <docker.image.name>${project.artifactId}</docker.image.name>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+        <logstash-logback-encoder.version>6.3</logstash-logback-encoder.version>
     </properties>
 
     <dependencies>
@@ -73,7 +76,11 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
