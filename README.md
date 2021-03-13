@@ -861,7 +861,7 @@ docker run -d --restart unless-stopped -p 23306:3306 \
     -v photo-app-volume:/var/lib/mysql \
     mysql:8.0.23 
 ```
--  use [UserDataMySQL.sh](ec2/UserDataMySQL.sh) to create t2.micro EC2 instance
+-  use [UserDataMySQL.sh](deploy/ec2/UserDataMySQL.sh) to create t2.micro EC2 instance
 -  attach SGs
     -  `micro-mysql`
     -  `microservices-sg`
@@ -884,7 +884,7 @@ docker run -d --restart unless-stopped \
 
 #####  230. Run Logstash for Users Microservice
 
--  use [UserDataUsersLogstash.sh](ec2/UserDataUsersLogstash.sh) to start EC2 instance for Users-WS
+-  use [UserDataUsersLogstash.sh](deploy/ec2/UserDataUsersLogstash.sh) to start EC2 instance for Users-WS
 
 #####  Run Zipkin on AWS
 
@@ -896,5 +896,21 @@ docker run -d --restart unless-stopped \
     -p 9411:9411 \
     openzipkin/zipkin 
 ```
--  use [UserDataZipkin.sh](ec2/UserDataZipkin.sh) to run Zipkin on t2.micro EC2 instance
+-  use [UserDataZipkin.sh](deploy/ec2/UserDataZipkin.sh) to run Zipkin on t2.micro EC2 instance
+
+####  Running Microservices in Swarm Mode on AWS EC2 and Digitalocean
+
+#####  Initialize Docker Swarm Cluster in Digital Ocean
+
+1.  Provision Docker Droplet Node 1 with UserData from [UserDataNode1.sh](deploy\digital-ocean-swarm\UserDataNode1.sh)
+2.  Get join-token for managers
+    -  SSH to node1
+        -  `ssh -i ~\.ssh\digital_ocean root@167.71.62.227`
+    -  get join-token
+        -  `docker swarm join-token worker` -> save it
+        -  **OR** manager
+        -  `docker swarm join-token manager` -> save it
+3.  Provision 2 another nodes Docker Droplet with UserData from [UserDataNode2345.sh](deploy\digital-ocean-swarm\UserDataNode2345.sh)
+    -  replace line with join token by token from step 2
+
                       
