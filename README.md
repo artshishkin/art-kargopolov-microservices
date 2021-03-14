@@ -913,4 +913,10 @@ docker run -d --restart unless-stopped \
 3.  Provision 2 another nodes Docker Droplet with UserData from [UserDataNode2345.sh](deploy\digital-ocean-swarm\UserDataNode2345.sh)
     -  replace line with join token by token from step 2
 
-                      
+#####  Deploy stack to Swarm on Digital Ocean
+
+1.  Use Portainer management console to deploy Swarm stack
+    -  Visit public URL of Swarm and port 9000
+2.  Use [swarm-stack.yml](compose\swarm-stack.yml)
+3.  Set environment variable for stack
+    -  SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD - <password value>                        

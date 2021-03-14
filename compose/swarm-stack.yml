@@ -1,0 +1,152 @@
+version: '3.7'
+
+services:
+
+#  docker run --name photo-app-api -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_USER=photo_app_user -e MYSQL_PASSWORD=photo_app_password -e MYSQL_DATABASE=photo_app_db -v photo-app-volume:/var/lib/mysql -p 23306:3306 -d mysql:8.0.23
+  mysql:
+    image: mysql:8.0.23
+    ports: ["23306:3306"]
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_USER: photo_app_user
+      MYSQL_PASSWORD: photo_app_password
+      MYSQL_DATABASE: photo_app_db
+    volumes:
+      - photo-app-volume-mysql:/var/lib/mysql
+
+#  docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+  rabbit-mq:
+    image: rabbitmq:3-management
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    hostname: my-rabbit
+
+  #  docker run -d -p 9411:9411 openzipkin/zipkin
+  zipkin:
+    image: openzipkin/zipkin
+    ports: ["9411:9411"]
+
+  config-server:
+    image: artarkatesoft/photo-app-api-config-server
+    ports: ["8012:8012"]
+    environment:
+      SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD: ${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD}
+    depends_on:
+      - rabbit-mq
+
+  discovery-service:
+    image: artarkatesoft/photo-app-discovery-service
+    ports: ["8010:8010"]
+    restart: on-failure
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+    depends_on:
+      - config-server
+
+  api-gateway:
+    image: artarkatesoft/photo-app-api-gateway
+    ports: ["8011:8011"]
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+      SPRING_PROFILES_ACTIVE: asymmetric
+    labels:
+      collect_logs_with_filebeat: 'true'
+      decode_log_event_to_json_object: 'true'
+    depends_on:
+      - config-server
+      - discovery-service
+      - zipkin
+
+  albums-ws:
+    image: artarkatesoft/photo-app-api-albums
+    ports: ["8989:8989"]
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+      SERVER_PORT: 8989
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+      eureka.instance.prefer-ip-address: 'false'
+      eureka.instance.hostname: 'albums-ws'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/actuator/health"]
+      interval: 20s
+      timeout: 2s
+      retries: 5
+    labels:
+      collect_logs_with_filebeat: 'true'
+      decode_log_event_to_json_object: 'true'
+    depends_on:
+      - config-server
+      - discovery-service
+      - zipkin
+
+  users-ws:
+    image: artarkatesoft/photo-app-api-users
+    ports: ["8999:8999"]
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8012
+      SERVER_PORT: 8999
+      SPRING_PROFILES_ACTIVE: mysql,asymmetric,compose
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+      logging.level.net.shyshkin: debug
+      eureka.instance.prefer-ip-address: 'false'
+      eureka.instance.hostname: 'users-ws'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8999/actuator/health"]
+      interval: 20s
+      timeout: 2s
+      retries: 5
+    labels:
+      collect_logs_with_filebeat: 'true'
+      decode_log_event_to_json_object: 'true'
+    depends_on:
+      - config-server
+      - discovery-service
+      - zipkin
+      - mysql
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  #  docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    ports:
+      - 9200:9200
+    environment:
+      discovery.type: single-node
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s"]
+      interval: 20s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - photo-app-volume-elasticsearch:/usr/share/elasticsearch/data
+
+  #  docker run --link YOUR_ELASTICSEARCH_CONTAINER_NAME_OR_ID:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.10.2
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    ports: ["5601:5601"]
+    restart: on-failure
+    depends_on:
+      - elasticsearch
+    volumes:
+      - photo-app-volume-kibana:/usr/share/kibana
+
+  filebeat:
+    image: artarkatesoft/photo-app-filebeat:7.10.1
+    volumes:
+      -  /var/lib/docker/containers:/var/lib/docker/containers:ro           # Docker logs
+      -  /var/run/docker.sock:/var/run/docker.sock:ro                       # Additional information about containers
+#    extra_hosts:
+#      - "elasticsearch:10.114.16.5"
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  photo-app-volume-mysql:
+  photo-app-volume-elasticsearch:
+  photo-app-volume-kibana:
