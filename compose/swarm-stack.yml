@@ -6,10 +6,13 @@ services:
   mysql:
     image: mysql:8.0.23
     ports: ["23306:3306"]
+    secrets:
+      - mysql_user
+      - mysql_pwd
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-      MYSQL_USER: photo_app_user
-      MYSQL_PASSWORD: photo_app_password
+      MYSQL_USER_FILE: /run/secrets/mysql_user
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_pwd
       MYSQL_DATABASE: photo_app_db
     volumes:
       - photo-app-volume-mysql:/var/lib/mysql
@@ -150,3 +153,10 @@ volumes:
   photo-app-volume-mysql:
   photo-app-volume-elasticsearch:
   photo-app-volume-kibana:
+
+secrets:
+  mysql_user:
+    external: true
+  mysql_pwd:
+    external: true
+

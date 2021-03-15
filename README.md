@@ -972,4 +972,13 @@ docker run -d --restart unless-stopped \
 3.  Deploy [swarm-stack.yml](compose/swarm-stack.yml)
 4.  Test it
 
+#####  Using Swarm Secrets to provide Database passwords  
+
+1.  Using Portainer create Secrets
+    -  `mysql_user`: <value>
+    -  `mysql_pwd`: <value>
+2.  Deploy [swarm-stack.yml](compose/swarm-stack.yml)
+3.  Test it    
+
+
         
