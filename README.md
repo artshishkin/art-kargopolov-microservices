@@ -950,4 +950,26 @@ docker run -d --restart unless-stopped \
     -  `docker node ls` - list all nodes
     -  `docker node promote 5vf bzm` - make nodes managers with id stating with `5vf` and `bzm`
     -  `docker node ls` - make sure they became managers
+
+#####  Deploy stack to AWS Swarm 
+
+1.  Create security group for testing purposes
+
+| Type | Protocol | Port range | Source | Description - optional |
+| ---- | -------- | ---------- | ------ | ---------------------- |    
+| Custom TCP |	TCP |	9411 |	93.170.219.0/24 |	Zipkin |
+| Custom TCP |	TCP |	9000 |	93.170.219.0/24 |	Portainer |
+| Custom TCP |	TCP |	8012 |	93.170.219.0/24 |	Config |
+| Custom TCP |	TCP |	23306 |	93.170.219.0/24 |	MySQL |
+| Custom TCP |	TCP |	8999 |	93.170.219.0/24 |	Users-ws |
+| Custom TCP |	TCP |	5601 |	93.170.219.0/24 |	Kibana |
+| Custom TCP |	TCP |	8011 |	93.170.219.0/24 |	Gateway |
+| Custom TCP |	TCP |	8989 |	93.170.219.0/24 |	Albums-ws |
+| Custom TCP |	TCP |	8010 |	93.170.219.0/24 |	Eureka |
+| Custom TCP |	TCP |	9200 |	93.170.219.0/24 |	Elasticsearch |
+
+2.  Add Security Group to Node01
+3.  Deploy [swarm-stack.yml](compose/swarm-stack.yml)
+4.  Test it
+
         
