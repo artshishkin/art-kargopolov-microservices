@@ -33,10 +33,11 @@ services:
   config-server:
     image: artarkatesoft/photo-app-api-config-server
     ports: ["8012:8012"]
-    environment:
-      SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD: ${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD}
     depends_on:
       - rabbit-mq
+    secrets:
+      - git-token
+
 
   discovery-service:
     image: artarkatesoft/photo-app-discovery-service
@@ -158,5 +159,7 @@ secrets:
   mysql_user:
     external: true
   mysql_pwd:
+    external: true
+  git-token:
     external: true
 

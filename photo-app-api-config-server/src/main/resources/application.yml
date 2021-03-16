@@ -26,7 +26,7 @@ spring:
         git:
           uri: https://github.com/artshishkin/art-kargopolov-microservices-photo-app-repository
           username: artshishkin
-          password: 'PasswordInEnvironmentVariable(or Token - better)'
+          password: ${docker-secret-git-token} #'PasswordInEnvironmentVariable(or Token - better)'
           clone-on-start: true
           default-label: main
 

@@ -980,5 +980,14 @@ docker run -d --restart unless-stopped \
 2.  Deploy [swarm-stack.yml](compose/swarm-stack.yml)
 3.  Test it    
 
+#####  Using Swarm Secrets to provide Config Server Git Password
+
+1.  Create own EnvironmentPostProcessor to load secrets from file
+    -  [Injecting credentials into a Docker container running a Spring Boot application](https://bmuschko.com/blog/docker-secret-spring-boot/)
+    -  [spring-boot-docker-secret](https://github.com/kwonghung-YIP/spring-boot-docker-secret)
+2.  Create secret
+    -  through Portainer create secret `git-token` that match `SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD`
+3.  Deploy and test [swarm-stack.yml](compose/swarm-stack.yml)       
+
 
         
